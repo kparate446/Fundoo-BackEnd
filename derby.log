@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Tue Mar 03 12:11:09 IST 2020:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-0170-9f20-761a-00000a226dc8 
+on database directory memory:/home/admin1/Documents/workspace-spring-tool-suite-4-4.5.1.RELEASE/Fandoo-App-Backend/testdb with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@3d4eac69 
+Loaded from file:/home/admin1/.m2/repository/org/apache/derby/derby/10.14.2.0/derby-10.14.2.0.jar
+java.vendor=Ubuntu
+java.runtime.version=11.0.6+10-post-Ubuntu-1ubuntu118.04.1
+user.dir=/home/admin1/Documents/workspace-spring-tool-suite-4-4.5.1.RELEASE/Fandoo-App-Backend
+os.name=Linux
+os.arch=amd64
+os.version=4.15.0-88-generic
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
