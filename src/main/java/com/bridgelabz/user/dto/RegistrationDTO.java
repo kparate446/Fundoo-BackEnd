@@ -1,15 +1,31 @@
 package com.bridgelabz.user.dto;
+
+import javax.validation.Valid;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 /**
- * @author :- krunal Parate
+ * @Created By :- krunal Parate
  * @Purpose :- Created the Registartion DTO Class
  */
 public class RegistrationDTO  {
-	
+	@Valid
+	@NotEmpty(message = "Please provide a firstName")
 	private String firstName;
-	private String middleName;
+	@NotEmpty(message = "Please provide a lastName")
 	private String lastName;
+	@NotEmpty
+	@Email(message = "Email should be valid")
 	private String email;
+	@NotEmpty
+	@Size(min = 2, max = 30)
 	private String password;
+	@NotEmpty(message = "Please provide a Mobile Number")
+	/*@Size(min=0,max=10)*/
+//	@Pattern(regexp = "^[0-9]*$")
 	private long phoneNo;
 	
 	public String getFirstName() {
@@ -17,12 +33,6 @@ public class RegistrationDTO  {
 	}
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
-	}
-	public String getMiddleName() {
-		return middleName;
-	}
-	public void setMiddleName(String middleName) {
-		this.middleName = middleName;
 	}
 	public String getLastName() {
 		return lastName;
@@ -50,7 +60,7 @@ public class RegistrationDTO  {
 	}
 	@Override
 	public String toString() {
-		return "RegistrationDTO [firstName=" + firstName + ", middleName=" + middleName + ", lastName=" + lastName
+		return "RegistrationDTO [firstName=" + firstName + ", lastName=" + lastName
 				+ ", email=" + email + ", password=" + password + ", phoneNo=" + phoneNo + "]";
 	}
 }

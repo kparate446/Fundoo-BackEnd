@@ -1,22 +1,44 @@
 package com.bridgelabz.user.model;
+
 /**
- * @author :- krunal Parate
+ * @Created By :- krunal Parate
  * @Purpose :- Create the POJO Class & Table
  */
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.springframework.format.annotation.DateTimeFormat;
+
+
 @Entity
-@Table(name = "userDetails")
+@Table(name = "userInformation")
 public class User {
 	@Id
+	@GeneratedValue
+	private int id;
 	private String firstName;
 	private String lastName;
 	private String email;
 	private String password;
+	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+	private String date;
 	private long phoneNo;
-	private boolean isValidate=false;
+	
+	private boolean isValidate = false;
 
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getDate() {
+		return date;
+	}
+	public void setDate(String date) {
+		this.date = date;
+	}
 	public boolean isValidate() {
 		return isValidate;
 	}
@@ -55,12 +77,8 @@ public class User {
 	}
 	@Override
 	public String toString() {
-		return "User [firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + ", password=" + password
-				+ ", phoneNo=" + phoneNo + ", isValidate=" + isValidate + "]";
-	}	
+		return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
+				+ ", password=" + password + ", date=" + date + ", phoneNo=" + phoneNo + ", isValidate=" + isValidate
+				+ "]";
+	}
 }
-
-
-
-
-

@@ -1,6 +1,6 @@
 package com.bridgelabz.user.message;
 /**
- * @author :- krunal Parate
+ * @Created By :- krunal Parate
  * @Purpose :- It is Used in Simple Message Varification
  */
 import org.springframework.mail.SimpleMailMessage;
@@ -12,8 +12,8 @@ public class MessageResponse {
 		message.setTo(reciverEmail); 
 		message.setFrom("forgotbridge70@gmail.com"); // To Send the Msg 
 		message.setSubject("Complete Verification!!!! ");
-		message.setText("Hi" + token);
+		message.setText("Link "+"http://localhost:8080/userapi/validation/"+ token);
 		return message;
 	}
-
 }
+

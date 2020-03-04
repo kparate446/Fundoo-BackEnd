@@ -1,6 +1,6 @@
 package com.bridgelabz.user.utility;
 /**
- * @author :- krunal Parate
+ * @Created By :- krunal Parate
  * @Purpose :- It is Used In Email Sender Services
  */
 import org.springframework.beans.factory.annotation.Autowired;

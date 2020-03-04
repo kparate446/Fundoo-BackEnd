@@ -1,6 +1,6 @@
 package com.bridgelabz.user;
 /**
- * @author :- krunal Parate
+ * @Created By :- krunal Parate
  * @Purpose :- It is used in object Mapper
  */
 import org.modelmapper.ModelMapper;
@@ -12,7 +12,6 @@ public class ModelConfiguration {
 	@Bean
 	ModelMapper getModelMapper() {
 		ModelMapper modelMapper = new ModelMapper();
-		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		return modelMapper;
 	}
 }

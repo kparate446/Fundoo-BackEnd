@@ -1,6 +1,6 @@
 package com.bridgelabz.user.utility;
 /**
- * @author :- krunal Parate
+ * @Created By :- krunal Parate
  * @Purpose :- Created the JWT Token
  */
 import java.util.Date;
@@ -26,7 +26,6 @@ public class JwtToken {
 			claim = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
 		} catch (Exception e) {
 		System.out.println("INVALID TOKEN");
-//			throw new InvalideTokenException(message.Invalide_Token);
 		}
 		return claim.getId();
 	}
