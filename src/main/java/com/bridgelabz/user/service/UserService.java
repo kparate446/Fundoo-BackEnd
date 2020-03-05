@@ -50,18 +50,17 @@ public class UserService implements IService {
 		System.out.println(loginUser.getPassword());
 		// Print Token in Console
 		System.out.println(token);
-		if (user != null) {
-			if (user.isValidate()!= false) {
-				if (!user.getPassword().equals(loginUser.getPassword())) {
-					return message = "invalid password";
-				} else {
-					email = messageResponse.verifyMail(user.getEmail(), user.getFirstName(), token);
-					emailSenderService.sendEmail(email);
-					userRepository.save(user);
-					return message = "login success";
-				}
+		if (user.isValidate()) {
+			if (user.getPassword().equals(loginUser.getPassword())) {
+				email = messageResponse.verifyMail(user.getEmail(), user.getFirstName(), token);
+				emailSenderService.sendEmail(email);
+				userRepository.save(user);
+				return message = "login success";
+			} else {
+				return message = "invalid password";
 			}
 		}
+
 		return message;
 	}
 
@@ -70,21 +69,20 @@ public class UserService implements IService {
 	public Response validateUser(String token) {
 		String email = jwtToken.getToken(token);
 		User user = userRepository.findByemail(email);
-		if (user == null)
+		if (user == null) 
 			System.out.println("User Not Exit");
-		user.setValidate(true);
+		else
+			user.setValidate(true);
 		userRepository.save(user);
-		return new Response(200, "Validation", messageData.validateUser);
+		return new Response(200, "Validation", token);
 	}
 
 	/** Registration For User */
 	public void addUser(RegistrationDTO registrationDTO) {
 		User user = mapper.map(registrationDTO, User.class);
 		System.out.println("USER CLASS " + user);
-//		userRepository.save(user); // Add the Data
 		String token = jwtToken.generateToken(user.getEmail());
 		System.out.println(token);
-//		userRepository.save(user);
 		/*
 		 * javaMailSender .send(MessageResponse.verifyMail(user.getEmail(),
 		 * user.getFirstName(), token));
@@ -92,5 +90,5 @@ public class UserService implements IService {
 		email = messageResponse.verifyMail(user.getEmail(), user.getFirstName(), token);
 		emailSenderService.sendEmail(email);
 		userRepository.save(user);
-	}
+	}	
 }

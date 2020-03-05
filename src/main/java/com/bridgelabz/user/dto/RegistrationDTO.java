@@ -23,7 +23,7 @@ public class RegistrationDTO  {
 	@NotEmpty
 	@Size(min = 2, max = 30)
 	private String password;
-	@NotEmpty(message = "Please provide a Mobile Number")
+//	@NotEmpty(message = "Please provide a Mobile Number")
 	/*@Size(min=0,max=10)*/
 //	@Pattern(regexp = "^[0-9]*$")
 	private long phoneNo;

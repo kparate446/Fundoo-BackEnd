@@ -1,5 +1,7 @@
 package com.bridgelabz.user.model;
 
+import java.util.Date;
+
 /**
  * @Created By :- krunal Parate
  * @Purpose :- Create the POJO Class & Table
@@ -21,8 +23,8 @@ public class User {
 	private String lastName;
 	private String email;
 	private String password;
-	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-	private String date;
+	
+	private Date date = new Date();
 	private long phoneNo;
 	
 	private boolean isValidate = false;
@@ -33,11 +35,8 @@ public class User {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public String getDate() {
+	public Date getDate() {
 		return date;
-	}
-	public void setDate(String date) {
-		this.date = date;
 	}
 	public boolean isValidate() {
 		return isValidate;

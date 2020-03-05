@@ -59,4 +59,13 @@ public class UserController {
 		Response response = service.validateUser(token);
 		return new ResponseEntity<String>(response.getMessage(),HttpStatus.OK);
 	}
+//	@PostMapping("/forgotpassword")
+//	public ResponseEntity<String> forgotPassword(@RequestHeader String token){
+//		Response response = s
+//		
+//		return null;
+		
+//	}
+	
+	
 }
