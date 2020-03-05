@@ -1,18 +1,13 @@
 package com.bridgelabz.user.model;
-
-import java.util.Date;
-
 /**
  * @Created By :- krunal Parate
  * @Purpose :- Create the POJO Class & Table
  */
+import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import org.springframework.format.annotation.DateTimeFormat;
-
-
 @Entity
 @Table(name = "userInformation")
 public class User {
