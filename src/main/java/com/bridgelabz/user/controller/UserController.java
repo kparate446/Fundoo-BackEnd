@@ -1,5 +1,5 @@
 /**
- * @Created By :- krunal Parate
+ * @Created By :- Krunal Parate
  * @Purpose :- Created the API
  */
 package com.bridgelabz.user.controller;

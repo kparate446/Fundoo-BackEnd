@@ -12,6 +12,8 @@ import com.bridgelabz.user.dto.ForgotPasswordDTO;
 import com.bridgelabz.user.dto.LoginDTO;
 import com.bridgelabz.user.dto.RegistrationDTO;
 import com.bridgelabz.user.dto.ResetPasswordDTO;
+import com.bridgelabz.user.exception.InvalidPasswordException;
+import com.bridgelabz.user.exception.InvalidTokenException;
 import com.bridgelabz.user.message.MessageData;
 import com.bridgelabz.user.message.MessageResponse;
 import com.bridgelabz.user.model.User;
@@ -40,6 +42,7 @@ public class UserService implements IService {
 	@Autowired
 	private JwtToken jwtToken;
 	String message;
+	
 
 	/** Login User */
 	public String login(LoginDTO loginUser) {
@@ -58,7 +61,8 @@ public class UserService implements IService {
 				userRepository.save(user);
 				return message = "login success";
 			} else {
-				return message = "invalid password";
+			//return message = "invalid password";
+				throw new InvalidPasswordException(messageData.Invalid_Password);
 			}
 		}
 		return message;
@@ -89,7 +93,7 @@ public class UserService implements IService {
 		emailSenderService.sendEmail(email);
 		userRepository.save(user);
 	}
-	/** Forget Password*/
+	/** Forgot Password*/
 	public Response forgetPassword(ForgotPasswordDTO forgotPasswordDTO) {
 		User user = userRepository.findByemail((forgotPasswordDTO.getEmail()));
 		String token = jwtToken.generateToken(forgotPasswordDTO.getEmail());
@@ -108,14 +112,16 @@ public class UserService implements IService {
 		User user = userRepository.findByemail(email1);
 		if(user == null) {
 			System.out.println("User Not Exit");
-			return new Response(400, "Invalid Password", token);
+			//return new Response(400, "Invalid Password", token);
+			throw new InvalidPasswordException(messageData.Invalid_Password);
 		}else {
 			if(resetPasswordDTO.getPassword().equals(resetPasswordDTO.getConfirmpassword())){
 				user.setPassword(resetPasswordDTO.getPassword());
 				userRepository.save(user);
-				return new Response(200, "Password Reset Sucessfully", token);
+				return new Response(200,"Password Reset Sucessfully", token);
 			}
 		}
-		return new Response(400, "Invalid Password", token); 
+		//return new Response(400, "Invalid Password", token);
+		throw new InvalidTokenException(messageData.Invalid_Token);
 	}
 }

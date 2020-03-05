@@ -3,7 +3,7 @@ package com.bridgelabz.user.dto;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 /**
- * @Created By :- krunal Parate
+ * @Created By :- Krunal Parate
  * @Purpose :- Created the ForgotPassword DTO Class
  */
 public class ForgotPasswordDTO {

@@ -1,10 +1,18 @@
 package com.bridgelabz.user.dto;
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
+
 /**
- * @Created By :- krunal Parate
+ * @Created By :- Krunal Parate
  * @Purpose :- Created the ResetPassword DTO Class
  */
 public class ResetPasswordDTO {
+	@NotEmpty
+	@Size(min = 2, max = 30)
 	private String password;
+	@NotEmpty
+	@Size(min = 2, max = 30)
 	private String confirmpassword;
 
 	public ResetPasswordDTO(String password, String confirmpassword) {

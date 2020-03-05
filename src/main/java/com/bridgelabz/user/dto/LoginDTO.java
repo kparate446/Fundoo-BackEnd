@@ -5,7 +5,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 /**
- * @Created By :- krunal Parate
+ * @Created By :- Krunal Parate
  * @Purpose :- Created the Login DTO Class
  */
 public class LoginDTO {
