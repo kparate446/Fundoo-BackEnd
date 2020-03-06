@@ -1,6 +1,5 @@
 package com.bridgelabz.fandoonotesapi.dto;
 
-import javax.persistence.GeneratedValue;
 import javax.validation.constraints.NotEmpty;
 
 public class UpdateNoteDto {

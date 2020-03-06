@@ -1,14 +1,15 @@
 package com.bridgelabz.fandoonotesapi.utility;
-/**
- * @Created By :- krunal Parate
- * @Purpose :- Created the JWT Token
- */
+
 import java.util.Date;
 import org.springframework.stereotype.Component;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
- @Component
+/**
+ * @Created By :- krunal Parate
+ * Purpose :- Created the JWT Token
+ */
+@Component
 public class JwtToken {
 // Algorithm
 	SignatureAlgorithm alorithm = SignatureAlgorithm.HS256;

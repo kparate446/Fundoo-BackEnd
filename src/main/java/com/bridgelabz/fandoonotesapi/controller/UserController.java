@@ -1,7 +1,4 @@
-/**
- * @Created By :- Krunal Parate
- * @Purpose :- Created the API
- */
+
 package com.bridgelabz.fandoonotesapi.controller;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,23 +10,25 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.bridgelabz.fandoonotesapi.dto.ForgotPasswordDTO;
 import com.bridgelabz.fandoonotesapi.dto.LoginDTO;
 import com.bridgelabz.fandoonotesapi.dto.RegistrationDTO;
 import com.bridgelabz.fandoonotesapi.dto.ResetPasswordDTO;
 import com.bridgelabz.fandoonotesapi.responce.Response;
-import com.bridgelabz.fandoonotesapi.service.IService;
-
+import com.bridgelabz.fandoonotesapi.service.UserService;
+/**
+ * @author :- Krunal Parate
+ * Purpose :- API Created By User Registration, User Login, Validation,Forgot Password,Reset Password.
+ */
 @RestController // return the data converted JSON Automatically
 @RequestMapping("/userapi")
 public class UserController {
 	@Autowired // Declaired the Dependency
-	private IService service;
+	private UserService service;
 	/**
 	 * Purpose :-Registration Users
 	 * @param registrationDTO
-	 * @return
+	 * @return :- Response
 	 * @RequestBody -> Pass the JSON
 	 */
 	@PostMapping("/addusers")
@@ -37,11 +36,10 @@ public class UserController {
 		service.addUser(registrationDTO);
 		return "Registration Successfull";
 	}
-	/**Login*/
 	/**
 	 *  Purpose :- Login Users
 	 * @param loginDTO
-	 * @return
+	 * @return :- Response
 	 */
 	@PostMapping("/loginusers")
 	public String loginUser(@RequestBody LoginDTO loginDTO) {
@@ -50,8 +48,8 @@ public class UserController {
 	/**
 	 *  Purpose :- Validation Token
 	 *  
-	 * @param token :-
-	 * @return :- 
+	 * @param token :- Get the Token in User
+	 * @return :- Response
 	 */
 	@PostMapping("/validation")
 	public ResponseEntity<String> validation(@RequestHeader String token){
@@ -72,7 +70,7 @@ public class UserController {
 	 * Purpose :- Reset Password
 	 * @param token :- Varified the Token
 	 * @param resetPasswordDTO :- Access the resetPasswordDTO Data
-	 * @return
+	 * @return :- Response
 	 */
 	@PutMapping("/resetpassword")
 	public ResponseEntity<String> resetpassword(@RequestHeader String token,ResetPasswordDTO resetPasswordDTO){

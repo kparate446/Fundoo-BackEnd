@@ -3,66 +3,62 @@ package com.bridgelabz.fandoonotesapi.service;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.bridgelabz.fandoonotesapi.dto.CreateNoteDto;
-import com.bridgelabz.fandoonotesapi.dto.UpdateNoteDto;
-import com.bridgelabz.fandoonotesapi.model.Notes;
+import com.bridgelabz.fandoonotesapi.dto.CreateLabelDto;
+import com.bridgelabz.fandoonotesapi.model.Labels;
 import com.bridgelabz.fandoonotesapi.model.User;
-import com.bridgelabz.fandoonotesapi.repository.NotesRepository;
+import com.bridgelabz.fandoonotesapi.repository.LabelsRepository;
 import com.bridgelabz.fandoonotesapi.repository.UserRepository;
 import com.bridgelabz.fandoonotesapi.responce.Response;
 import com.bridgelabz.fandoonotesapi.utility.JwtToken;
-
+/**
+ * @author :- Krunal Parate
+ * Purpose :-  Implementing the Create,Update,Delete Notes
+ */
 @Service
-public class NoteServices implements Services {
+public class LabelServiceImp implements LabelService{
 	@Autowired
 	private ModelMapper mapper;
 	@Autowired
-	private NotesRepository notesRepository;
+	private LabelsRepository labelRepository;
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
 	private JwtToken jwtToken;
-//	@Autowired
 	private User user;
 	String message;
 
-	/** Create Note */
-	@Override
-	public Response createNote(String token, CreateNoteDto createNoteDto) {
-		Notes notes = mapper.map(createNoteDto, Notes.class);
-		System.out.println("Notes CLASS " + notes);
+	/** Create Labels*/
+	public Response createLabel(String token, CreateLabelDto createLabelDto) {
+		Labels labels= mapper.map(createLabelDto, Labels.class);
+		System.out.println("Labels CLASS " + labels);
 		String email = jwtToken.getToken(token);
 		user = userRepository.findByEmail(email);
 		System.out.println(token);
 		if (user == null) {
 			System.out.println("User Not Exit");
 			return new Response(400, "Invalid Account", token);
-		} else if (notes != null) {
-			notes.setDiscription(createNoteDto.getDiscription());
-			notes.setTitle(createNoteDto.getTitle());
-			notesRepository.save(notes);
-			return new Response(200, "Created Notes", token);
+		} else if (labels != null) {
+			labels.setLabelName(createLabelDto.getLabelName());
+			labelRepository.save(labels);
+			return new Response(200, "Created Labels", token);
 		} else {
 			System.out.println("Note Not Present");
 			return new Response(400, "Note Not Present", token);
 		}
 	}
-
-	/** Updated Note */
-	public Response updateNote(String token, UpdateNoteDto updateNoteDto, int id) {
-		Notes notes = notesRepository.findById(id);
-		System.out.println("Notes CLASS " + notes);
+	/** Updated Labels */
+	public Response updateNote(String token, CreateLabelDto createLabelDto, int id) {
+		Labels labels = labelRepository.findById(id);
+		System.out.println("Notes CLASS " + labels);
 		String email = jwtToken.getToken(token);
 		user = userRepository.findByEmail(email);
 		System.out.println(token);
 		if (user == null) {
 			System.out.println("User Not Exit");
 			return new Response(400, "Invalid Account", token);
-		} else if (notes != null) {
-			notes.setDiscription(updateNoteDto.getDiscription());
-			notes.setTitle(updateNoteDto.getTitle());
-			notesRepository.save(notes);
-			// .delete(ID);
+		} else if (labels != null) {
+			labels.setLabelName(createLabelDto.getLabelName());
+			labelRepository.save(labels);
 			return new Response(200, "Updated Notes", token);
 		} else {
 			System.out.println("Note Not Present");
@@ -70,9 +66,9 @@ public class NoteServices implements Services {
 		}
 	}
 
-	/** Deleted Note */
+	/** Deleted Labels */
 	public Response deleteNote(String token, int id) {
-		Notes notes = notesRepository.findById(id);
+		Labels labels = labelRepository.findById(id);
 		String email = jwtToken.getToken(token);
 		user = userRepository.findByEmail(email);
 		System.out.println(token);
@@ -80,9 +76,9 @@ public class NoteServices implements Services {
 			System.out.println("User Not Exit");
 			return new Response(400, "Invalid Account", token);
 		} 
-//		else if(user.getNotes()!=null) 
-		else if (notes != null) {
-			notesRepository.deleteById(id);
+		//		else if(user.getNotes()!=null) 
+		else if (labels != null) {
+			labelRepository.deleteById(id);
 			return new Response(200, "Deleted Note Successfully", token);
 		} else {
 			System.out.println("Note Not Present");

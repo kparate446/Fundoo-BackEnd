@@ -3,7 +3,6 @@ package com.bridgelabz.fandoonotesapi.dto;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-
 /**
  * @Created By :- Krunal Parate
  * @Purpose :- Created the Login DTO Class

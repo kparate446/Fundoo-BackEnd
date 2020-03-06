@@ -1,19 +1,16 @@
 package com.bridgelabz.fandoonotesapi.model;
 import java.util.ArrayList;
-/**
- * @Created By :- krunal Parate
- * @Purpose :- Create the POJO Class & Table
- */
 import java.util.Date;
 import java.util.List;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-
+/**
+ * @author :- Krunal Parate
+ * Purpose :- User POJO Class & userInformation Table Created
+ */
 @Entity
 @Table(name = "userInformation")
 public class User {

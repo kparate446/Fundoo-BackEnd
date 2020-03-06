@@ -2,12 +2,12 @@ package com.bridgelabz.fandoonotesapi.model;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
-
 /**
  * @author :- Krunal Parate
  * @@Purpose :- Create the Notes POJO Class & Table
@@ -17,7 +17,7 @@ import javax.validation.constraints.NotEmpty;
 @Table(name = "notesDetails")
 public class Notes {
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 	@NotEmpty
 	private String title;
