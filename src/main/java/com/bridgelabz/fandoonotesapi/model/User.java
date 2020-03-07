@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -15,7 +16,7 @@ import javax.persistence.Table;
 @Table(name = "userInformation")
 public class User {
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 	private String firstName;
 	private String lastName;
@@ -26,8 +27,17 @@ public class User {
 	private boolean isValidate = false;
 	
 	@OneToMany(mappedBy = "user")
-	private List<Notes> notes = new ArrayList<Notes>();
+	private List<Labels>labels = new ArrayList<Labels>();
+	public List<Labels> getLabels() {
+		return labels;
+	}
+	public void setLabels(List<Labels> labels) {
+		this.labels = labels;
+	}
 	
+	@OneToMany(mappedBy = "user")
+	private List<Notes> notes = new ArrayList<Notes>();
+
 	public List<Notes> getNotes() {
 		return notes;
 	}

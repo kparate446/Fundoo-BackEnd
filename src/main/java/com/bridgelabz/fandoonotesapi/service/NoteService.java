@@ -11,4 +11,7 @@ public interface NoteService {
 	Response createNote(String token, CreateNoteDto createNoteDto);
 	Response updateNote(String token, UpdateNoteDto updateNoteDto, int id);
 	Response deleteNote(String token, int id);
+//	List<Notes> showAllNotes(int id,String token);
+	Response getNotes(String token);
+
 }

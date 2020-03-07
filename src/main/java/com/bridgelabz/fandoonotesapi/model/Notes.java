@@ -8,6 +8,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 /**
  * @author :- Krunal Parate
  * @@Purpose :- Create the Notes POJO Class & Table
@@ -15,6 +17,8 @@ import javax.validation.constraints.NotEmpty;
  */
 @Entity
 @Table(name = "notesDetails")
+// Egnoring the All User Data
+@JsonIgnoreProperties({"user"}) 
 public class Notes {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -23,11 +27,10 @@ public class Notes {
 	private String title;
 	@NotEmpty
 	private String discription;
-	
+	// Mapped User to Notes
 	@ManyToOne
-	@JoinColumn(name = "user",nullable = false)
+	@JoinColumn(name = "userId",nullable = false)
 	private User user;
-	
 	
 	public User getUser() {
 		return user;

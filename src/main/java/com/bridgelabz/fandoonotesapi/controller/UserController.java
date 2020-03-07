@@ -1,9 +1,11 @@
-
 package com.bridgelabz.fandoonotesapi.controller;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -75,6 +77,21 @@ public class UserController {
 	@PutMapping("/resetpassword")
 	public ResponseEntity<String> resetpassword(@RequestHeader String token,ResetPasswordDTO resetPasswordDTO){
 		Response response = service.resetPassword(token,resetPasswordDTO);
+		return new ResponseEntity<String>(response.getMessage(),HttpStatus.OK);
+	}
+	/**
+	 * Purpose :- Getting All Users
+	 * @return :- Response
+	 */
+	@GetMapping("/getUsers")
+	public ResponseEntity<Response> getUsers() 
+	{
+		Response response= service.getLabels();
+		return new ResponseEntity<Response>(response,HttpStatus.OK);
+	}
+	@DeleteMapping("/deleteUser/{id}")
+	public ResponseEntity<String> deleteUser(@RequestHeader String token,@PathVariable  int id){
+		Response response = service.deleteUsers(token,id);
 		return new ResponseEntity<String>(response.getMessage(),HttpStatus.OK);
 	}
 }

@@ -1,5 +1,7 @@
 package com.bridgelabz.fandoonotesapi.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,6 +41,7 @@ public class LabelServiceImp implements LabelService{
 			return new Response(400, "Invalid Account", token);
 		} else if (labels != null) {
 			labels.setLabelName(createLabelDto.getLabelName());
+			labels.setUser(user);// Add the User Id
 			labelRepository.save(labels);
 			return new Response(200, "Created Labels", token);
 		} else {
@@ -65,7 +68,6 @@ public class LabelServiceImp implements LabelService{
 			return new Response(400, "Note Not Present", token);
 		}
 	}
-
 	/** Deleted Labels */
 	public Response deleteNote(String token, int id) {
 		Labels labels = labelRepository.findById(id);
@@ -77,12 +79,26 @@ public class LabelServiceImp implements LabelService{
 			return new Response(400, "Invalid Account", token);
 		} 
 		//		else if(user.getNotes()!=null) 
-		else if (labels != null) {
+		if(labels.getUser().getId()== user.getId()) {
 			labelRepository.deleteById(id);
-			return new Response(200, "Deleted Note Successfully", token);
+			return new Response(200, "Deleted Label Successfully", token);
 		} else {
 			System.out.println("Note Not Present");
 			return new Response(400, "Note Not Present", token);
 		}
+	}
+	/** Getting All Labels*/
+	public Response getLabels(String token){
+		//		Notes notes = (Notes) notesRepository.findAll();
+		String email = jwtToken.getToken(token);
+		user = userRepository.findByEmail(email);
+		if(user == null) {
+			System.out.println("User Not Exit");
+			new Response(400, "Invalid Account", token);
+		} if(user.getNotes()!=null) {
+			List<Labels>labels = labelRepository.findAll().stream().filter(e ->e.getUser().getId()==user.getId()).collect(Collectors.toList());
+			return	new Response(200, "Show All Labels ", labels);
+		}
+		return  new Response(400, "Note Not Present", token);
 	}
 }

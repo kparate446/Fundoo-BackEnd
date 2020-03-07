@@ -3,6 +3,8 @@ package com.bridgelabz.fandoonotesapi.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -24,6 +26,7 @@ public class LabelController {
 	private LabelService service;
 
 	/**
+	 * Purpose :- Created Labels
 	 * @param token :- Get the Token in User
 	 * @param createLabelDto 
 	 * @return :- Response
@@ -34,24 +37,37 @@ public class LabelController {
 		return new ResponseEntity<String>(response.getMessage(),HttpStatus.OK);
 	}
 	/**
+	 * Purpose :- Updated Labels
 	 * @param token :- Get the Token in User
 	 * @param createLabelDto
 	 * @param id :-Which position Update
 	 * @return :- Response
 	 */
-	@PostMapping("/updateLable/{id}")
+	@PutMapping("/updateLable/{id}")
 	public ResponseEntity<String>updateLabel(@RequestHeader String token,@RequestBody CreateLabelDto  createLabelDto,@PathVariable int id){
 		Response response = service.updateNote(token,createLabelDto, id);
 		return new ResponseEntity<String>(response.getMessage(),HttpStatus.OK);
 	}
 	/**
+	 * Purpose :- Deleted Labels
 	 * @param token :- Get the Token in User
 	 * @param id :- Which Position Deleted
 	 * @return :- Response
 	 */
-	@PutMapping("/deleteLable/{id}")
+	@DeleteMapping("/deleteLable/{id}")
 	public ResponseEntity<String> deleteLabel(@RequestHeader String token,@PathVariable int id){
 		Response response = service.deleteNote(token, id);
 		return new ResponseEntity<String>(response.getMessage(),HttpStatus.OK);
+	}
+	/**
+	 * Purpose :- 
+	 * @param token :-Get the Token in User
+	 * @return :- Response
+	 */
+	@GetMapping("/getLabels")
+	public ResponseEntity<Response> getLabels(String token) 
+	{
+		Response response= service.getLabels(token);
+		return new ResponseEntity<Response>(response,HttpStatus.OK);
 	}
 }

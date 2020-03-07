@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -24,7 +25,6 @@ import com.bridgelabz.fandoonotesapi.service.NoteService;
 public class NotesController {
 	@Autowired // Declaired the Dependency
 	private NoteService service;
-	
 	/**
 	 * Purpose :- Created the Note
 	 * @param token :- Get the Token in User
@@ -37,6 +37,7 @@ public class NotesController {
 		return new ResponseEntity<String>(response.getMessage(),HttpStatus.OK);
 	}
 	/**
+	 * Purpose :- Updated the Note
 	 * @param token:- Get the Token in User
 	 * @param updateNoteDto
 	 * @param id:- Which position Update
@@ -48,6 +49,7 @@ public class NotesController {
 		return new ResponseEntity<String>(response.getMessage(),HttpStatus.OK);
 	}
 	/**
+	 * Purpose :- Deleted the Note
 	 * @param token :- Get the Token in User
 	 * @param id :- Which Position Delete
 	 * @return :- Response
@@ -56,5 +58,16 @@ public class NotesController {
 	public ResponseEntity<String> deleteNote(@RequestHeader String token,@PathVariable  int id){
 		Response response = service.deleteNote(token,id);
 		return new ResponseEntity<String>(response.getMessage(),HttpStatus.OK);
+	}
+	/**
+	 * Purpose :- Getting the Note
+	 * @param token :- Get the Token in User
+	 * @return :- Response
+	 */
+	@GetMapping("/getNotes")
+	public ResponseEntity<Response> showAllNote(String token) 
+	{
+		Response response= service.getNotes(token);
+		return new ResponseEntity<Response>(response,HttpStatus.OK);
 	}
 }

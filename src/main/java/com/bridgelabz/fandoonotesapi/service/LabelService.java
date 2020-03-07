@@ -10,4 +10,5 @@ public interface LabelService {
 	Response createLabel(String token, CreateLabelDto createLabelDto);
 	Response updateNote(String token, CreateLabelDto createLabelDto, int id);
 	Response deleteNote(String token, int id);
+	Response getLabels(String token);
 }

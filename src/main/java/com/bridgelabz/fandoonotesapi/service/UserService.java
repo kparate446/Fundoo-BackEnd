@@ -9,9 +9,11 @@ import com.bridgelabz.fandoonotesapi.responce.Response;
  * Purpose - User Service Interface Created
  */
 public interface UserService {
+	Response getLabels();
 	String login(LoginDTO loginUser);
 	void addUser(RegistrationDTO registrationDTO);
 	Response validateUser(String token);
 	Response forgetPassword(ForgotPasswordDTO forgotPasswordDTO);
+	Response deleteUsers(String token, int id);
 	Response resetPassword(String token, ResetPasswordDTO resetPasswordDTO);
 }

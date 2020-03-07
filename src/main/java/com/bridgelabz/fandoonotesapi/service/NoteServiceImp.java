@@ -1,5 +1,7 @@
 package com.bridgelabz.fandoonotesapi.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,10 +13,6 @@ import com.bridgelabz.fandoonotesapi.repository.NotesRepository;
 import com.bridgelabz.fandoonotesapi.repository.UserRepository;
 import com.bridgelabz.fandoonotesapi.responce.Response;
 import com.bridgelabz.fandoonotesapi.utility.JwtToken;
-/**
- * @author :- Krunal Parate
- * Purpose :- Implementing the Create,Update,Delete Labels
- */
 @Service
 public class NoteServiceImp implements NoteService {
 	@Autowired
@@ -42,6 +40,7 @@ public class NoteServiceImp implements NoteService {
 		} else if (notes != null) {
 			notes.setDiscription(createNoteDto.getDiscription());
 			notes.setTitle(createNoteDto.getTitle());
+			notes.setUser(user);//
 			notesRepository.save(notes);
 			return new Response(200, "Created Notes", token);
 		} else {
@@ -83,12 +82,30 @@ public class NoteServiceImp implements NoteService {
 			return new Response(400, "Invalid Account", token);
 		} 
 		//		else if(user.getNotes()!=null) 
-		else if (notes != null) {
-			notesRepository.deleteById(id);
-			return new Response(200, "Deleted Note Successfully", token);
-		} else {
+		 if (notes == null) { 
+			return new Response(200, "Deleted Note Not present ", token);
+		} 
+		 if(notes.getUser().getId()== user.getId()){/***/
+			 notesRepository.deleteById(id);
+				return new Response(200, "Deleted Note Successfully", token);
+		 }
+				 else {
 			System.out.println("Note Not Present");
-			return new Response(400, "Note Not Present", token);
+			return new Response(400, "This Note does Not Belongs to Present", token);
 		}
+	}
+	/**Show All Notes*/
+	public Response getNotes(String token){
+		//Notes notes = (Notes) notesRepository.findAll();
+		String email = jwtToken.getToken(token);
+		user = userRepository.findByEmail(email);
+		if(user == null) {
+			System.out.println("User Not Exit");
+			new Response(400, "Invalid Account", token);
+		} if(user.getNotes()!=null) {
+			List<Notes>note = notesRepository.findAll().stream().filter(e ->e.getUser().getId()==user.getId()).collect(Collectors.toList());
+			return	new Response(200, "Show the All Notes Successfully ", note);
+		}
+		return  new Response(400, "Note Not Present", token);
 	}
 }
