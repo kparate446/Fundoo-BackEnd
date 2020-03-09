@@ -1,12 +1,22 @@
 package com.bridgelabz.fandoonotesapi.dto;
+
+import javax.validation.constraints.NotEmpty;
+
+import com.bridgelabz.fandoonotesapi.model.Notes;
+
 /**
  * @author :- Krunal Parate
  * @Purpose :- Created DTO Class
  *
  */
 public class CreateLabelDto {
+	@NotEmpty
 	private String labelName;
-
+	private Notes notes;
+	
+	public void setNotes(Notes notes) {
+		this.notes = notes;
+	}
 	public String getLabelName() {
 		return labelName;
 	}
@@ -15,6 +25,6 @@ public class CreateLabelDto {
 	}
 	@Override
 	public String toString() {
-		return "CreateLabelDto [labelName=" + labelName + "]";
+		return "CreateLabelDto [labelName=" + labelName + ", notes=" + notes + "]";
 	}
 }

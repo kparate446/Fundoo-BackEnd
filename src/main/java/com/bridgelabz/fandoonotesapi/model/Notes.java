@@ -1,16 +1,17 @@
 package com.bridgelabz.fandoonotesapi.model;
 
+import java.util.ArrayList;
 import java.util.Date;
-
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 /**
  * @author :- Krunal Parate
@@ -31,7 +32,15 @@ public class Notes {
 	private String discription;
 
 	private Date date = new Date();
-
+	
+	@OneToMany(mappedBy = "notes")
+	private List<Collabrator>collabrators = new ArrayList<Collabrator>();
+	public List<Collabrator> getCollabrators() {
+		return collabrators;
+	}
+	public void setCollabrators(List<Collabrator> collabrators) {
+		this.collabrators = collabrators;
+	}
 	// Mapped User to Notes
 	@ManyToOne
 	@JoinColumn(name = "userId",nullable = false)

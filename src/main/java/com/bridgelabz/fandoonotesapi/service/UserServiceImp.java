@@ -17,6 +17,7 @@ import com.bridgelabz.fandoonotesapi.repository.UserRepository;
 import com.bridgelabz.fandoonotesapi.responce.Response;
 import com.bridgelabz.fandoonotesapi.utility.EmailSenderService;
 import com.bridgelabz.fandoonotesapi.utility.JwtToken;
+
 /**
  * @Created By :- krunal Parate
  * @Purpose :- Implement the Login,Registration,Forgot & ResetPassword
@@ -107,6 +108,7 @@ public class UserServiceImp implements UserService {
 		userRepository.save(user);
 		return new Response(200, "Validation", token);
 	}
+
 	/** Reset Password */
 	@Override
 	public Response resetPassword(String token, ResetPasswordDTO resetPasswordDTO) {
@@ -124,18 +126,18 @@ public class UserServiceImp implements UserService {
 			throw new InvalidPasswordException(messageData.Invalid_Password);
 		}
 	}
-	/** Getting All Users*/
-	public Response getLabels(){
-		if(userRepository.findAll() ==null) {
-			return  new Response(200, "Password Reset Successfully", "No User");
-		}
-		else {
-			List<User>users= userRepository.findAll();
-			return	new Response(200, "Show All Users ", users);
+
+	/** Getting All Users */
+	public Response getLabels() {
+		if (userRepository.findAll() == null) {
+			return new Response(200, "Password Reset Successfully", "No User");
+		} else {
+			List<User> users = userRepository.findAll();
+			return new Response(200, "Show All Users ", users);
 		}
 	}
-	/** Deleted Users*/
-	@SuppressWarnings("unused")
+
+	/** Deleted Users */
 	public Response deleteUsers(String token, int id) {
 		User user;
 		String email = jwtToken.getToken(token);
@@ -144,14 +146,13 @@ public class UserServiceImp implements UserService {
 		if (user == null) {
 			System.out.println("User Not Exit");
 			return new Response(400, "Invalid Account", token);
-		} 
-		//		else if(user.getNotes()!=null) 
-		if(id== user.getId()) {
+		}
+		// else if(user.getNotes()!=null)
+		if (id == user.getId()) {
 			userRepository.deleteById(id);
 			return new Response(200, "Deleted User Successfully", token);
-			
-		}
-		else {
+
+		} else {
 			System.out.println("Note Not Present");
 			return new Response(400, "This User does Not Belongs to Present", token);
 		}

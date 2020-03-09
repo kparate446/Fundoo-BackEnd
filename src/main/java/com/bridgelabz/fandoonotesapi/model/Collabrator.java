@@ -4,16 +4,27 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 @Entity
-@Table(name = "collabratorDetails")
+@Table(name = "collabratorDetail")
 public class Collabrator {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 	private String mailReceiver;
 	private String mailSender;
+	@ManyToOne
+	@JoinColumn(name = "notesId",nullable = false)
+	private Notes notes;
 	
+	public Notes getNotes() {
+		return notes;
+	}
+	public void setNotes(Notes notes) {
+		this.notes = notes;
+	}
 	public int getId() {
 		return id;
 	}
@@ -34,6 +45,7 @@ public class Collabrator {
 	}
 	@Override
 	public String toString() {
-		return "Collaborator [id=" + id + ", mailReceiver=" + mailReceiver + ", mailSender=" + mailSender + "]";
+		return "Collabrator [id=" + id + ", mailReceiver=" + mailReceiver + ", mailSender=" + mailSender + ", notes="
+				+ notes + "]";
 	}
 }
