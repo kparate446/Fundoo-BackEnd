@@ -13,5 +13,7 @@ public interface NoteService {
 	Response deleteNote(String token, int id);
 //	List<Notes> showAllNotes(int id,String token);
 	Response getNotes(String token);
-
+	Response sortByTitle(String token,String order);
+	Response sortByDescription(String token,String order);
+	Response sortByDate(String token,String order);
 }

@@ -1,5 +1,7 @@
 package com.bridgelabz.fandoonotesapi.model;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -27,11 +29,14 @@ public class Notes {
 	private String title;
 	@NotEmpty
 	private String discription;
+
+	private Date date = new Date();
+
 	// Mapped User to Notes
 	@ManyToOne
 	@JoinColumn(name = "userId",nullable = false)
 	private User user;
-	
+
 	public User getUser() {
 		return user;
 	}
@@ -43,6 +48,9 @@ public class Notes {
 	}
 	public void setId(int id) {
 		this.id = id;
+	}
+	public Date getDate() {
+		return date;
 	}
 	public String getTitle() {
 		return title;

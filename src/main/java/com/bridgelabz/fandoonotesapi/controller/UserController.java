@@ -89,6 +89,12 @@ public class UserController {
 		Response response= service.getLabels();
 		return new ResponseEntity<Response>(response,HttpStatus.OK);
 	}
+	/**
+	 * Purpose :- Deleted Users
+	 * @param token :-Varified the Token
+	 * @param id :- Id of Person
+	 * @return :- Response
+	 */
 	@DeleteMapping("/deleteUser/{id}")
 	public ResponseEntity<String> deleteUser(@RequestHeader String token,@PathVariable  int id){
 		Response response = service.deleteUsers(token,id);

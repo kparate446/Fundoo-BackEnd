@@ -82,14 +82,14 @@ public class NoteServiceImp implements NoteService {
 			return new Response(400, "Invalid Account", token);
 		} 
 		//		else if(user.getNotes()!=null) 
-		 if (notes == null) { 
+		if (notes == null) { 
 			return new Response(200, "Deleted Note Not present ", token);
 		} 
-		 if(notes.getUser().getId()== user.getId()){/***/
-			 notesRepository.deleteById(id);
-				return new Response(200, "Deleted Note Successfully", token);
-		 }
-				 else {
+		if(notes.getUser().getId()== user.getId()){/***/
+			notesRepository.deleteById(id);
+			return new Response(200, "Deleted Note Successfully", token);
+		}
+		else {
 			System.out.println("Note Not Present");
 			return new Response(400, "This Note does Not Belongs to Present", token);
 		}
@@ -107,5 +107,71 @@ public class NoteServiceImp implements NoteService {
 			return	new Response(200, "Show the All Notes Successfully ", note);
 		}
 		return  new Response(400, "Note Not Present", token);
+	}
+	/**Sort By Title */
+	public Response sortByTitle(String token,String order){
+		//Notes notes = (Notes) notesRepository.findAll();
+		String email = jwtToken.getToken(token);
+		String Desc="desc";
+		String Asc = "asc";
+		user = userRepository.findByEmail(email);
+		if(user == null) {
+			System.out.println("User Not Exit");
+			new Response(400, "Invalid Account", token);
+		} if(user.getNotes()!= null) {
+			if(Asc.equals(order)) {
+			List<Notes>note = notesRepository.findAll().stream().sorted((list1,list2)->list1.getTitle().compareTo(list2.getTitle())).collect(Collectors.toList());
+			//			List<Notes>note = notesRepository.findAll().stream().sorted((list2,list1)->list1.getTitle().compareTo(list2.getTitle())).collect(Collectors.toList());
+			return	new Response(200, "Sorted By Title in Ascending Order ", note);
+			}if(Desc.equals(order)) {
+				List<Notes>note = notesRepository.findAll().stream().sorted((list2,list1)->list1.getTitle().compareTo(list2.getTitle())).collect(Collectors.toList());
+				return	new Response(200, "Sorted By Title in Descending Order ", note);
+			}
+		}
+		return new Response(400, "Note Not Present", token);
+	}
+	/** Sort By Description */
+	public Response sortByDescription(String token,String order) {
+		String email = jwtToken.getToken(token);
+		String Desc="desc";
+		String Asc = "asc";
+		user = userRepository.findByEmail(email);
+		if(user == null) {
+			new Response(400, "Invalid Account", token);
+		}	
+		if(user.getNotes()!=null) {
+			if(Asc.equals(order)) {
+			List<Notes>notes = notesRepository.findAll().stream().sorted((list1,list2)->list1.getDiscription().compareTo(list2.getDiscription()
+					)).collect(Collectors.toList());
+			return new Response(200, "Sorted By Description in Ascending Order ", notes);
+			}
+			if(Desc.equals(order)) {
+				List<Notes>notes = notesRepository.findAll().stream().sorted((list2,list1)->list1.getDiscription().compareTo(list2.getDiscription()
+						)).collect(Collectors.toList());
+				return new Response(200, "Sorted By Description in Descending Order ", notes);
+			}
+		}
+		return new Response(400, "Note not present", token);
+	}
+	/** Sort By Date */
+	public Response sortByDate(String token,String order) {
+		String email = jwtToken.getToken(token);
+		String Desc="desc";
+		String Asc = "asc";
+		user = userRepository.findByEmail(email);
+		if(user == null) {
+			new Response(400, "Invalid Account", token);
+		}	
+		if(user.getNotes()!=null) {
+			if(Asc.equals(order)) {
+			List<Notes>notes = notesRepository.findAll().stream().sorted((list1,list2)->list1.getDate().compareTo(list2.getDate())).collect(Collectors.toList());
+			return new Response(200, "Sorted By Date in Ascending Order ", notes);
+			}
+			if(Desc.equals(order)) {
+				List<Notes>notes = notesRepository.findAll().stream().sorted((list2,list1)->list1.getDate().compareTo(list2.getDate())).collect(Collectors.toList());
+				return new Response(200, "Sorted By Date in Descending Order ", notes);
+			}
+		}
+		return new Response(400, "Note not present", token);
 	}
 }

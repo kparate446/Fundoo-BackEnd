@@ -67,7 +67,41 @@ public class NotesController {
 	@GetMapping("/getNotes")
 	public ResponseEntity<Response> showAllNote(String token) 
 	{
-		Response response= service.getNotes(token);
+		Response response = service.getNotes(token);
+		return new ResponseEntity<Response>(response,HttpStatus.OK);
+	}
+	/**
+	 * Purpose :- Sorted By Title 
+	 * @param order :- Which Order(Ascending or Descending Order)
+	 * @param token :- Verified the Token
+	 * @return :- Response
+	 */
+	@GetMapping("/sortByTitle/{order}")
+	public ResponseEntity<Response> sortByTitle(String token,@PathVariable String order){
+		Response response = service.sortByTitle(token,order);
+		return new ResponseEntity<Response>(response,HttpStatus.OK);
+	}
+
+	/**
+	 * Purpose :-Sorted by Discription 
+	 * @param token :- Verified the Token
+	 * @param order :- Which Order(Ascending or Descending Order)
+	 * @return :- Response
+	 */
+	@GetMapping("/sortByDescription/{order}")
+	public ResponseEntity<Response>sortByDescription(String token,@PathVariable String order){
+		Response response = service.sortByDescription(token, order);
+		return new ResponseEntity<Response>(response,HttpStatus.OK);
+	}
+	/**
+	 * Purpose :- Sorted By Date
+	 * @param token :- Verified the Token
+	 * @param order :- Which Order(Ascending or Descending Order)
+	 * @return :- Response
+	 */
+	@GetMapping("/sortByDate/{order}")
+	public ResponseEntity<Response> sortByDate(String token,@PathVariable String order){
+		Response response = service.sortByDate(token,order);
 		return new ResponseEntity<Response>(response,HttpStatus.OK);
 	}
 }

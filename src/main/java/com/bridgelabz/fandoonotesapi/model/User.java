@@ -25,7 +25,7 @@ public class User {
 	private Date date = new Date();
 	private long phoneNo;
 	private boolean isValidate = false;
-	
+
 	@OneToMany(mappedBy = "user")
 	private List<Labels>labels = new ArrayList<Labels>();
 	public List<Labels> getLabels() {
@@ -34,7 +34,7 @@ public class User {
 	public void setLabels(List<Labels> labels) {
 		this.labels = labels;
 	}
-	
+
 	@OneToMany(mappedBy = "user")
 	private List<Notes> notes = new ArrayList<Notes>();
 
