@@ -6,4 +6,6 @@ import com.bridgelabz.fandoonotesapi.responce.Response;
 public interface CollabratorService {
 	Response createCollabrator(String token,int id, CollabratorDto collabratorDto);
 	Response deletedCollabrator(String token, int id);
+	Response updatedCollabrator(String token, int id, CollabratorDto collabratorDto);
+	Response getCollabrator(String token);
 }

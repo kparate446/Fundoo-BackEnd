@@ -7,8 +7,16 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+/**
+ * @author :- Krunal Parate
+ * Purpose :- Collabrator Details Table Created 
+ *
+ */
 @Entity
 @Table(name = "collabratorDetail")
+@JsonIgnoreProperties({"notes"})
 public class Collabrator {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

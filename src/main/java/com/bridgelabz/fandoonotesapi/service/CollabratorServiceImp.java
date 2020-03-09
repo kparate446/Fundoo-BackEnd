@@ -1,5 +1,6 @@
 package com.bridgelabz.fandoonotesapi.service;
 
+import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -13,7 +14,10 @@ import com.bridgelabz.fandoonotesapi.repository.NotesRepository;
 import com.bridgelabz.fandoonotesapi.repository.UserRepository;
 import com.bridgelabz.fandoonotesapi.responce.Response;
 import com.bridgelabz.fandoonotesapi.utility.JwtToken;
-
+/**
+ * @author :- Krunal Parate
+ * Purpose :-  Implementing the Create,Update,Delete Collabrator
+ */
 @Service
 public class CollabratorServiceImp implements CollabratorService {
 	@Autowired
@@ -21,7 +25,7 @@ public class CollabratorServiceImp implements CollabratorService {
 	@Autowired
 	private NotesRepository notesRepository;
 	@Autowired
-	private CollabratorRepository collaboratorRepository;
+	private CollabratorRepository collabratorRepository;
 	@Autowired
 	private UserRepository userRepository;
 
@@ -59,7 +63,7 @@ public class CollabratorServiceImp implements CollabratorService {
 			collabrator.setMailReceiver(collabratorDto.getMailReceiver());
 			collabrator.setMailSender(user1.getEmail());
 			collabrator.setNotes(notes);
-			collaboratorRepository.save(collabrator);
+			collabratorRepository.save(collabrator);
 			return new Response(200, "Collabrator Created Successfully", token);
 		} else {
 			return new Response(400, "Note does Not Belongs to user", token);
@@ -75,16 +79,42 @@ public class CollabratorServiceImp implements CollabratorService {
 			System.out.println("User Not Exit");
 			return new Response(400, "Invalid Account", token);
 		}
-		if (collaboratorRepository.findById(id) != null) {
-			collaboratorRepository.deleteById(collaboratorRepository.findById(id).getId());
+		if (collabratorRepository.findById(id) != null) {
+			collabratorRepository.deleteById(collabratorRepository.findById(id).getId());
 			return new Response(200, "Collabrator Deleted Successfully", token);
 		} else {
 			return new Response(400, "Collabrator does Not Belongs to user", token);
 		}
 	}
-	/** Collabrator updated*/
-	public Response updatedCollabrator(String token) {
-		return null;
-		
+
+	/** Collabrator updated */
+	public Response updatedCollabrator(String token, int id, CollabratorDto collabratorDto) {
+		String email = jwtToken.getToken(token);
+		user = userRepository.findByEmail(email);
+		if (user == null) {
+			return new Response(400, "Invalid Account", token);
+		}
+		if (collabratorRepository.findById(id)==null) {
+			return new Response(200, "Collabrator Not Exit", token);
+		}else {
+		Collabrator collabrator	=collabratorRepository.findById(id);
+			collabrator.setMailReceiver(collabratorDto.getMailReceiver());
+			collabratorRepository.save(collabrator);
+			return new Response(200, "Collabrator Updated Successfully", token);
+		}
 	}
+	/** Show Collabrator*/
+	public Response getCollabrator(String token) {
+		String email = jwtToken.getToken(token);
+		user = userRepository.findByEmail(email);
+		if (user == null) {
+			return new Response(400, "Invalid Account", token);
+		}
+		if(user.getNotes()!=null) {
+			List<Collabrator>collabrator = collabratorRepository.findAll();
+			return	new Response(200, "Show the All Notes Successfully ", collabrator);
+		}
+		return  new Response(400, "Note Not Present", token);
+	}
+	
 }
