@@ -1,8 +1,8 @@
 package com.bridgelabz.fandoonotesapi.exception;
 
-public class InvalidPasswordException extends RuntimeException {
+public class InvalidCollabratorException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
-	public InvalidPasswordException(String message) {
+	public InvalidCollabratorException(String message) {
 		super(message);
 	}
 }

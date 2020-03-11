@@ -34,9 +34,9 @@ public class UserController {
 	 * @RequestBody -> Pass the JSON
 	 */
 	@PostMapping("/addusers")
-	public String addUser(@Valid @RequestBody RegistrationDTO registrationDTO) { 
-		service.addUser(registrationDTO);
-		return "Registration Successfull";
+	public ResponseEntity<String> addUser(@Valid @RequestBody RegistrationDTO registrationDTO) { 
+		Response response = service.addUser(registrationDTO);
+		return new ResponseEntity<String>(response.getMessage(),HttpStatus.OK);
 	}
 	/**
 	 *  Purpose :- Login Users
@@ -44,8 +44,9 @@ public class UserController {
 	 * @return :- Response
 	 */
 	@PostMapping("/loginusers")
-	public String loginUser(@RequestBody LoginDTO loginDTO) {
-		return service.login(loginDTO);		
+	public ResponseEntity<String> loginUser(@Valid @RequestBody LoginDTO loginDTO) {
+		Response response = service.login(loginDTO);
+		return new ResponseEntity<String>(response.getMessage(),HttpStatus.OK);
 	}
 	/**
 	 *  Purpose :- Validation Token
@@ -64,7 +65,7 @@ public class UserController {
 	 * @return :- Status
 	 */
 	@PostMapping("/forgotpassword")
-	public ResponseEntity<String> forgotPassword(@RequestBody ForgotPasswordDTO forgotPasswordDTO){
+	public ResponseEntity<String> forgotPassword(@Valid @RequestBody ForgotPasswordDTO forgotPasswordDTO){
 		Response response = service.forgetPassword(forgotPasswordDTO);
 		return new ResponseEntity<String>(response.getMessage(),HttpStatus.OK);
 	}

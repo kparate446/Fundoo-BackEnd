@@ -30,7 +30,6 @@ public class Notes {
 	private String title;
 	@NotEmpty
 	private String discription;
-
 	private Date date = new Date();
 	
 	@OneToMany(mappedBy = "notes")

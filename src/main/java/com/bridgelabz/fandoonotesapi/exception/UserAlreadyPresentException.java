@@ -1,8 +1,8 @@
 package com.bridgelabz.fandoonotesapi.exception;
 
-public class InvalidPasswordException extends RuntimeException {
+public class UserAlreadyPresentException extends RuntimeException{
 	private static final long serialVersionUID = 1L;
-	public InvalidPasswordException(String message) {
+	public UserAlreadyPresentException(String message) {
 		super(message);
 	}
 }

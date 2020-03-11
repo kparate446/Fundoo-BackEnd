@@ -10,6 +10,8 @@ import com.bridgelabz.fandoonotesapi.dto.LoginDTO;
 import com.bridgelabz.fandoonotesapi.dto.RegistrationDTO;
 import com.bridgelabz.fandoonotesapi.dto.ResetPasswordDTO;
 import com.bridgelabz.fandoonotesapi.exception.InvalidPasswordException;
+import com.bridgelabz.fandoonotesapi.exception.InvalidUserException;
+import com.bridgelabz.fandoonotesapi.exception.UserAlreadyPresentException;
 import com.bridgelabz.fandoonotesapi.message.MessageData;
 import com.bridgelabz.fandoonotesapi.message.MessageResponse;
 import com.bridgelabz.fandoonotesapi.model.User;
@@ -33,7 +35,7 @@ public class UserServiceImp implements UserService {
 	 */
 	@Autowired
 	private EmailSenderService emailSenderService;
-	// @Autowired
+	@Autowired
 	private MessageData messageData;
 	@Autowired
 	private MessageResponse messageResponse;
@@ -43,28 +45,28 @@ public class UserServiceImp implements UserService {
 	private JwtToken jwtToken;
 	String message;
 
-	/** Login User */
-	public String login(LoginDTO loginUser) {
-		// It is used in Mapped the Data-->JPA
-		User user = userRepository.findByEmail(loginUser.getEmail());
-		// To generate the Token
-		String token = jwtToken.generateToken(loginUser.getEmail());
-		System.out.println(user.getPassword());
-		System.out.println(loginUser.getPassword());
-		// Print Token in Console
+	/**
+	 * Registration For User
+	 * 
+	 * @return
+	 */
+	public Response addUser(RegistrationDTO registrationDTO) {
+		User user = mapper.map(registrationDTO, User.class);
+		System.out.println("USER CLASS " + user);
+		String token = jwtToken.generateToken(user.getEmail());
 		System.out.println(token);
-		if (user.isValidate()) {
-			if (user.getPassword().equals(loginUser.getPassword())) {
-				email = messageResponse.verifyMail(user.getEmail(), user.getFirstName(), token);
-				emailSenderService.sendEmail(email);
-				userRepository.save(user);
-				return message = "login success";
-			} else {
-				// return message = "invalid password";
-				throw new InvalidPasswordException(messageData.Invalid_Password);
-			}
+
+		if (user.getEmail().equals(registrationDTO.getEmail())) { /// ***
+			throw new UserAlreadyPresentException(messageData.userAlready_Present);
 		}
-		return message;
+		/*
+		 * javaMailSender .send(MessageResponse.verifyMail(user.getEmail(),
+		 * user.getFirstName(), token));
+		 */
+		email = messageResponse.verifyMail(user.getEmail(), user.getFirstName(), token);
+		emailSenderService.sendEmail(email);
+		userRepository.save(user);
+		return new Response(200, "Registration Successfull", token);
 	}
 
 	/** Varification Mail */
@@ -72,28 +74,36 @@ public class UserServiceImp implements UserService {
 	public Response validateUser(String token) {
 		String email = jwtToken.getToken(token);
 		User user = userRepository.findByEmail(email);
-		if (user == null)
+		if (user == null) {
 			System.out.println("User Not Exit");
-		else
+			throw new InvalidUserException(messageData.Invalid_User);
+		} else
 			user.setValidate(true);
 		userRepository.save(user);
 		return new Response(200, "Validation", token);
 	}
 
-	/** Registration For User */
-	public void addUser(RegistrationDTO registrationDTO) {
-		User user = mapper.map(registrationDTO, User.class);
-		System.out.println("USER CLASS " + user);
-		String token = jwtToken.generateToken(user.getEmail());
+	/** Login User */
+	public Response login(LoginDTO loginUser) {
+		// It is used in Mapped the Data-->JPA
+		User user = userRepository.findByEmail(loginUser.getEmail());
+		// To generate the Token
+		String token = jwtToken.generateToken(loginUser.getEmail());
+		// Print Token in Console
 		System.out.println(token);
-		/*
-		 * javaMailSender .send(MessageResponse.verifyMail(user.getEmail(),
-		 * user.getFirstName(), token));
-		 */
-
-		email = messageResponse.verifyMail(user.getEmail(), user.getFirstName(), token);
-		emailSenderService.sendEmail(email);
-		userRepository.save(user);
+		if (user == null)
+			throw new InvalidUserException(messageData.Invalid_User);
+		if (user.isValidate()) {
+			if (user.getPassword().equals(loginUser.getPassword())) {
+				email = messageResponse.verifyMail(user.getEmail(), user.getFirstName(), token);
+				emailSenderService.sendEmail(email);
+				userRepository.save(user);
+				return new Response(200, "login success", token);
+			} else {
+				throw new InvalidPasswordException(messageData.Invalid_Password);
+			}
+		} else
+			throw new InvalidUserException(messageData.Invalid_User);
 	}
 
 	/** Forgot Password */
@@ -116,8 +126,7 @@ public class UserServiceImp implements UserService {
 		User user = userRepository.findByEmail(email1);
 		if (user == null) {
 			System.out.println("User Not Exit");
-			// return new Response(400, "Invalid Password", token);
-			throw new InvalidPasswordException(messageData.Invalid_Password);
+			throw new InvalidUserException(messageData.Invalid_User);
 		} else if (resetPasswordDTO.getPassword().equals(resetPasswordDTO.getConfirmpassword())) {
 			user.setPassword(resetPasswordDTO.getPassword());
 			userRepository.save(user);
@@ -144,17 +153,14 @@ public class UserServiceImp implements UserService {
 		user = userRepository.findByEmail(email);
 		System.out.println(token);
 		if (user == null) {
-			System.out.println("User Not Exit");
-			return new Response(400, "Invalid Account", token);
+			throw new InvalidUserException(messageData.Invalid_User);
 		}
 		// else if(user.getNotes()!=null)
 		if (id == user.getId()) {
 			userRepository.deleteById(id);
 			return new Response(200, "Deleted User Successfully", token);
-
 		} else {
-			System.out.println("Note Not Present");
-			return new Response(400, "This User does Not Belongs to Present", token);
+			throw new InvalidUserException(messageData.Invalid_User);
 		}
 	}
 }

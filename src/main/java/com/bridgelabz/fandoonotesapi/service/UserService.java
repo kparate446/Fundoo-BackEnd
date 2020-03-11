@@ -10,8 +10,8 @@ import com.bridgelabz.fandoonotesapi.responce.Response;
  */
 public interface UserService {
 	Response getLabels();
-	String login(LoginDTO loginUser);
-	void addUser(RegistrationDTO registrationDTO);
+	Response login(LoginDTO loginUser);
+	Response addUser(RegistrationDTO registrationDTO);
 	Response validateUser(String token);
 	Response forgetPassword(ForgotPasswordDTO forgotPasswordDTO);
 	Response deleteUsers(String token, int id);

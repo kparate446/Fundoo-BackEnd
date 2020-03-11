@@ -1,5 +1,7 @@
 package com.bridgelabz.fandoonotesapi.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +34,7 @@ public class NotesController {
 	 * @return :- Response
 	 */
 	@PostMapping("/createNote")
-	public ResponseEntity<String> createNote(@RequestHeader String token,@RequestBody CreateNoteDto createNoteDto){
+	public ResponseEntity<String> createNote(@RequestHeader String token,@Valid @RequestBody CreateNoteDto createNoteDto){
 		Response response = service.createNote(token,createNoteDto);
 		return new ResponseEntity<String>(response.getMessage(),HttpStatus.OK);
 	}
@@ -44,7 +46,7 @@ public class NotesController {
 	 * @return :-Response
 	 */
 	@PutMapping("/updateNote/{id}")
-	public ResponseEntity<String> UpdateNote(@RequestHeader String token,@RequestBody UpdateNoteDto updateNoteDto,@PathVariable  int id){
+	public ResponseEntity<String> UpdateNote(@RequestHeader String token,@Valid @RequestBody UpdateNoteDto updateNoteDto,@PathVariable  int id){
 		Response response = service.updateNote(token,updateNoteDto,id);
 		return new ResponseEntity<String>(response.getMessage(),HttpStatus.OK);
 	}
@@ -65,7 +67,7 @@ public class NotesController {
 	 * @return :- Response
 	 */
 	@GetMapping("/getNotes")
-	public ResponseEntity<Response> showAllNote(String token) 
+	public ResponseEntity<Response> showAllNote(@RequestHeader String token) 
 	{
 		Response response = service.getNotes(token);
 		return new ResponseEntity<Response>(response,HttpStatus.OK);
@@ -77,7 +79,7 @@ public class NotesController {
 	 * @return :- Response
 	 */
 	@GetMapping("/sortByTitle/{order}")
-	public ResponseEntity<Response> sortByTitle(String token,@PathVariable String order){
+	public ResponseEntity<Response> sortByTitle(@RequestHeader String token,@PathVariable String order){
 		Response response = service.sortByTitle(token,order);
 		return new ResponseEntity<Response>(response,HttpStatus.OK);
 	}
@@ -89,7 +91,7 @@ public class NotesController {
 	 * @return :- Response
 	 */
 	@GetMapping("/sortByDescription/{order}")
-	public ResponseEntity<Response>sortByDescription(String token,@PathVariable String order){
+	public ResponseEntity<Response>sortByDescription(@RequestHeader String token,@PathVariable String order){
 		Response response = service.sortByDescription(token, order);
 		return new ResponseEntity<Response>(response,HttpStatus.OK);
 	}
@@ -100,7 +102,7 @@ public class NotesController {
 	 * @return :- Response
 	 */
 	@GetMapping("/sortByDate/{order}")
-	public ResponseEntity<Response> sortByDate(String token,@PathVariable String order){
+	public ResponseEntity<Response> sortByDate(@RequestHeader String token,@PathVariable String order){
 		Response response = service.sortByDate(token,order);
 		return new ResponseEntity<Response>(response,HttpStatus.OK);
 	}

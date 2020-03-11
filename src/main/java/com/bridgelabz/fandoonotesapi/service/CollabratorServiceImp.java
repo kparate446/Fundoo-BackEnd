@@ -1,11 +1,17 @@
 package com.bridgelabz.fandoonotesapi.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import com.bridgelabz.fandoonotesapi.dto.CollabratorDto;
+import com.bridgelabz.fandoonotesapi.exception.InvalidCollabratorException;
+import com.bridgelabz.fandoonotesapi.exception.InvalidNoteException;
+import com.bridgelabz.fandoonotesapi.exception.InvalidUserException;
+import com.bridgelabz.fandoonotesapi.exception.ReceiverMailAlreadyPresentException;
+import com.bridgelabz.fandoonotesapi.message.MessageData;
 import com.bridgelabz.fandoonotesapi.model.Collabrator;
 import com.bridgelabz.fandoonotesapi.model.Notes;
 import com.bridgelabz.fandoonotesapi.model.User;
@@ -28,6 +34,8 @@ public class CollabratorServiceImp implements CollabratorService {
 	private CollabratorRepository collabratorRepository;
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private MessageData messageData;
 
 	private User user;
 	// SimpleMailMessage--> InBuild Class
@@ -48,15 +56,14 @@ public class CollabratorServiceImp implements CollabratorService {
 		System.out.println(token);
 		if (userRepository.findByEmail(email) == null) {
 			System.out.println("User Not Exit");
-			return new Response(400, "Invalid Account", token);
+			throw new InvalidUserException(messageData.Invalid_User);
 		}
 		if (notes == null) {
-			return new Response(400, "Note Not Present", token);
+			throw new InvalidNoteException(messageData.Invalid_Note);
 		}
-
 		for (Collabrator collabrator1 : notes.getCollabrators()) {
 			if (collabrator1.getMailReceiver().equals(collabratorDto.getMailReceiver())) { /// ***
-				return new Response(400, "User Are Already Present", token);
+				throw new ReceiverMailAlreadyPresentException(messageData.ReceiverMail_Already_Present);
 			}
 		}
 		if (notes.getUser().getId() == userRepository.findByEmail(email).getId()) {
@@ -66,7 +73,7 @@ public class CollabratorServiceImp implements CollabratorService {
 			collabratorRepository.save(collabrator);
 			return new Response(200, "Collabrator Created Successfully", token);
 		} else {
-			return new Response(400, "Note does Not Belongs to user", token);
+			throw new InvalidNoteException(messageData.Invalid_Note);
 		}
 	}
 
@@ -77,13 +84,13 @@ public class CollabratorServiceImp implements CollabratorService {
 		System.out.println(token);
 		if (user == null) {
 			System.out.println("User Not Exit");
-			return new Response(400, "Invalid Account", token);
+			throw new InvalidUserException(messageData.Invalid_User);
 		}
 		if (collabratorRepository.findById(id) != null) {
 			collabratorRepository.deleteById(collabratorRepository.findById(id).getId());
 			return new Response(200, "Collabrator Deleted Successfully", token);
 		} else {
-			return new Response(400, "Collabrator does Not Belongs to user", token);
+			throw new InvalidCollabratorException(messageData.Invalid_Collabrator);
 		}
 	}
 
@@ -92,12 +99,12 @@ public class CollabratorServiceImp implements CollabratorService {
 		String email = jwtToken.getToken(token);
 		user = userRepository.findByEmail(email);
 		if (user == null) {
-			return new Response(400, "Invalid Account", token);
+			throw new InvalidUserException(messageData.Invalid_User);
 		}
 		if (collabratorRepository.findById(id)==null) {
-			return new Response(200, "Collabrator Not Exit", token);
+			throw new InvalidCollabratorException(messageData.Invalid_Collabrator);
 		}else {
-		Collabrator collabrator	=collabratorRepository.findById(id);
+			Collabrator collabrator	=collabratorRepository.findById(id);
 			collabrator.setMailReceiver(collabratorDto.getMailReceiver());
 			collabratorRepository.save(collabrator);
 			return new Response(200, "Collabrator Updated Successfully", token);
@@ -108,13 +115,12 @@ public class CollabratorServiceImp implements CollabratorService {
 		String email = jwtToken.getToken(token);
 		user = userRepository.findByEmail(email);
 		if (user == null) {
-			return new Response(400, "Invalid Account", token);
+			throw new InvalidUserException(messageData.Invalid_User);
 		}
 		if(user.getNotes()!=null) {
-			List<Collabrator>collabrator = collabratorRepository.findAll();
-			return	new Response(200, "Show the All Notes Successfully ", collabrator);
+			List<Collabrator>collabrator = collabratorRepository.findAll().stream().filter(e ->e.getNotes().getUser().getId()==user.getId()).collect(Collectors.toList());
+			return	new Response(200, "Show the All Collabrator Successfully ", collabrator);
 		}
-		return  new Response(400, "Note Not Present", token);
+		throw new InvalidCollabratorException(messageData.Invalid_Collabrator);
 	}
-	
 }

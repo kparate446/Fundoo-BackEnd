@@ -7,6 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.bridgelabz.fandoonotesapi.dto.CreateNoteDto;
 import com.bridgelabz.fandoonotesapi.dto.UpdateNoteDto;
+import com.bridgelabz.fandoonotesapi.exception.InvalidNoteException;
+import com.bridgelabz.fandoonotesapi.exception.InvalidOrderException;
+import com.bridgelabz.fandoonotesapi.exception.InvalidUserException;
+import com.bridgelabz.fandoonotesapi.message.MessageData;
 import com.bridgelabz.fandoonotesapi.model.Notes;
 import com.bridgelabz.fandoonotesapi.model.User;
 import com.bridgelabz.fandoonotesapi.repository.NotesRepository;
@@ -27,6 +31,8 @@ public class NoteServiceImp implements NoteService {
 	private UserRepository userRepository;
 	@Autowired
 	private JwtToken jwtToken;
+	@Autowired
+	private MessageData messageData;
 	//	@Autowired
 	private User user;
 	String message;
@@ -38,18 +44,20 @@ public class NoteServiceImp implements NoteService {
 		String email = jwtToken.getToken(token);
 		user = userRepository.findByEmail(email);
 		System.out.println(token);
+	
 		if (user == null) {
 			System.out.println("User Not Exit");
-			return new Response(400, "Invalid Account", token);
+			throw new InvalidUserException(messageData.Invalid_User);
 		} else if (notes != null) {
 			notes.setDiscription(createNoteDto.getDiscription());
 			notes.setTitle(createNoteDto.getTitle());
 			notes.setUser(user);//
 			notesRepository.save(notes);
 			return new Response(200, "Created Notes", token);
-		} else {
+		}
+		else {
 			System.out.println("Note Not Present");
-			return new Response(400, "Note Not Present", token);
+			throw new InvalidNoteException(messageData.Invalid_Note);
 		}
 	}
 
@@ -62,7 +70,7 @@ public class NoteServiceImp implements NoteService {
 		System.out.println(token);
 		if (user == null) {
 			System.out.println("User Not Exit");
-			return new Response(400, "Invalid Account", token);
+			throw new InvalidUserException(messageData.Invalid_User);
 		} else if (notes != null) {
 			notes.setDiscription(updateNoteDto.getDiscription());
 			notes.setTitle(updateNoteDto.getTitle());
@@ -71,7 +79,7 @@ public class NoteServiceImp implements NoteService {
 			return new Response(200, "Updated Notes", token);
 		} else {
 			System.out.println("Note Not Present");
-			return new Response(400, "Note Not Present", token);
+			throw new InvalidNoteException(messageData.Invalid_Note);
 		}
 	}
 
@@ -83,7 +91,7 @@ public class NoteServiceImp implements NoteService {
 		System.out.println(token);
 		if (user == null) {
 			System.out.println("User Not Exit");
-			return new Response(400, "Invalid Account", token);
+			throw new InvalidUserException(messageData.Invalid_User);
 		} 
 		//		else if(user.getNotes()!=null) 
 		if (notes == null) { 
@@ -94,8 +102,8 @@ public class NoteServiceImp implements NoteService {
 			return new Response(200, "Deleted Note Successfully", token);
 		}
 		else {
-			System.out.println("Note Not Present");
-			return new Response(400, "This Note does Not Belongs to Present", token);
+			System.out.println("This Note does Not Belongs to Present");
+			throw new InvalidNoteException(messageData.Invalid_Note);
 		}
 	}
 	/**Show All Notes*/
@@ -105,12 +113,12 @@ public class NoteServiceImp implements NoteService {
 		user = userRepository.findByEmail(email);
 		if(user == null) {
 			System.out.println("User Not Exit");
-			new Response(400, "Invalid Account", token);
+			throw new InvalidUserException(messageData.Invalid_User);
 		} if(user.getNotes()!=null) {
 			List<Notes>note = notesRepository.findAll().stream().filter(e ->e.getUser().getId()==user.getId()).collect(Collectors.toList());
 			return	new Response(200, "Show the All Notes Successfully ", note);
 		}
-		return  new Response(400, "Note Not Present", token);
+		throw new InvalidNoteException(messageData.Invalid_Note);
 	}
 	/**Sort By Title */
 	public Response sortByTitle(String token,String order){
@@ -121,7 +129,7 @@ public class NoteServiceImp implements NoteService {
 		user = userRepository.findByEmail(email);
 		if(user == null) {
 			System.out.println("User Not Exit");
-			new Response(400, "Invalid Account", token);
+			throw new InvalidUserException(messageData.Invalid_User);
 		} if(user.getNotes()!= null) {
 			if(Asc.equals(order)) {
 			List<Notes>note = notesRepository.findAll().stream().sorted((list1,list2)->list1.getTitle().compareTo(list2.getTitle())).collect(Collectors.toList());
@@ -131,8 +139,11 @@ public class NoteServiceImp implements NoteService {
 				List<Notes>note = notesRepository.findAll().stream().sorted((list2,list1)->list1.getTitle().compareTo(list2.getTitle())).collect(Collectors.toList());
 				return	new Response(200, "Sorted By Title in Descending Order ", note);
 			}
+			else {
+				throw new InvalidOrderException(messageData.Invalid_Order);
+			}
 		}
-		return new Response(400, "Note Not Present", token);
+		throw new InvalidNoteException(messageData.Invalid_Note);
 	}
 	/** Sort By Description */
 	public Response sortByDescription(String token,String order) {
@@ -141,7 +152,7 @@ public class NoteServiceImp implements NoteService {
 		String Asc = "asc";
 		user = userRepository.findByEmail(email);
 		if(user == null) {
-			new Response(400, "Invalid Account", token);
+			throw new InvalidUserException(messageData.Invalid_User);
 		}	
 		if(user.getNotes()!=null) {
 			if(Asc.equals(order)) {
@@ -154,8 +165,11 @@ public class NoteServiceImp implements NoteService {
 						)).collect(Collectors.toList());
 				return new Response(200, "Sorted By Description in Descending Order ", notes);
 			}
+			else {
+				throw new InvalidOrderException(messageData.Invalid_Order);
+			}
 		}
-		return new Response(400, "Note not present", token);
+		throw new InvalidNoteException(messageData.Invalid_Note);
 	}
 	/** Sort By Date */
 	public Response sortByDate(String token,String order) {
@@ -164,7 +178,7 @@ public class NoteServiceImp implements NoteService {
 		String Asc = "asc";
 		user = userRepository.findByEmail(email);
 		if(user == null) {
-			new Response(400, "Invalid Account", token);
+			throw new InvalidUserException(messageData.Invalid_User);
 		}	
 		if(user.getNotes()!=null) {
 			if(Asc.equals(order)) {
@@ -175,7 +189,10 @@ public class NoteServiceImp implements NoteService {
 				List<Notes>notes = notesRepository.findAll().stream().sorted((list2,list1)->list1.getDate().compareTo(list2.getDate())).collect(Collectors.toList());
 				return new Response(200, "Sorted By Date in Descending Order ", notes);
 			}
+			else {
+				throw new InvalidOrderException(messageData.Invalid_Order);
+			}
 		}
-		return new Response(400, "Note not present", token);
+		throw new InvalidNoteException(messageData.Invalid_Note);
 	}
 }

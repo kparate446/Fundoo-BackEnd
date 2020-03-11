@@ -14,9 +14,7 @@ public class CreateLabelDto {
 	private String labelName;
 	private Notes notes;
 	
-	public void setNotes(Notes notes) {
-		this.notes = notes;
-	}
+	
 	public String getLabelName() {
 		return labelName;
 	}
