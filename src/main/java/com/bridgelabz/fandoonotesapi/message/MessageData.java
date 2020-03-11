@@ -20,4 +20,6 @@ public class MessageData {
 	public String Invalid_Label = "Label Not Present";
 	public String Invalid_Collabrator = "Invalid Collabrator";
 	public String ReceiverMail_Already_Present = "User Are Already Present";
+	public String File_Not_Upload = " File Not Uploaded";
+	public String File_Is_Empty = "File is empty";
 }

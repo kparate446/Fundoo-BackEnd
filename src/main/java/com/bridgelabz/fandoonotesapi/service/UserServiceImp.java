@@ -69,7 +69,7 @@ public class UserServiceImp implements UserService {
 		return new Response(200, "Registration Successfull", token);
 	}
 
-	/** Varification Mail */
+	/** Verification Mail */
 	@Override
 	public Response validateUser(String token) {
 		String email = jwtToken.getToken(token);

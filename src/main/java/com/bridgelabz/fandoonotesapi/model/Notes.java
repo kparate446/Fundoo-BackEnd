@@ -32,6 +32,32 @@ public class Notes {
 	private String discription;
 	private Date date = new Date();
 	
+	private boolean isTrash = false;
+	private boolean isAchieve = false;
+	private boolean isPin = false;
+	
+	public boolean isTrash() {
+		return isTrash;
+	}
+	public void setTrash(boolean isTrash) {
+		this.isTrash = isTrash;
+	}
+	public boolean isAchieve() {
+		return isAchieve;
+	}
+	public void setAchieve(boolean isAchieve) {
+		this.isAchieve = isAchieve;
+	}
+	public boolean isPin() {
+		return isPin;
+	}
+	public void setPin(boolean isPin) {
+		this.isPin = isPin;
+	}
+	public void setDate(Date date) {
+		this.date = date;
+	}
+	// Mapped Collabrator to Notes
 	@OneToMany(mappedBy = "notes")
 	private List<Collabrator>collabrators = new ArrayList<Collabrator>();
 	public List<Collabrator> getCollabrators() {

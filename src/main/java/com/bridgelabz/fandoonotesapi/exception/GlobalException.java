@@ -50,16 +50,26 @@ public class GlobalException {
 	@ExceptionHandler(InvalidLabelException.class)
 	public ResponseEntity<Response> InvalidLabelException(Exception e){
 		return new ResponseEntity<Response>(new Response(Integer.parseInt(message.Bad_Request)
-				,e.getMessage(),"Enter the asc or desc"),HttpStatus.BAD_REQUEST);
+				,e.getMessage(),"Please Try Again"),HttpStatus.BAD_REQUEST);
 	}
 	@ExceptionHandler(InvalidCollabratorException.class)
 	public ResponseEntity<Response> InvalidCollabratorException(Exception e){
 		return new ResponseEntity<Response>(new Response(Integer.parseInt(message.Bad_Request)
-				,e.getMessage(),"Enter the asc or desc"),HttpStatus.BAD_REQUEST);
+				,e.getMessage(),"Please Try Again"),HttpStatus.BAD_REQUEST);
 	}
 	@ExceptionHandler(ReceiverMailAlreadyPresentException.class)
 	public ResponseEntity<Response> ReceiverMailAlreadyPresentException(Exception e){
 		return new ResponseEntity<Response>(new Response(Integer.parseInt(message.Bad_Request)
-				,e.getMessage(),"Enter the asc or desc"),HttpStatus.BAD_REQUEST);
+				,e.getMessage(),"Please Try Again"),HttpStatus.BAD_REQUEST);
+	}
+	@ExceptionHandler(FileNotUploadedException.class)
+	public ResponseEntity<Response> FileNotUploadedException(Exception e){
+		return new ResponseEntity<Response>(new Response(Integer.parseInt(message.Bad_Request)
+				,e.getMessage(),"Please Try Again"),HttpStatus.BAD_REQUEST);
+	}
+	@ExceptionHandler(FileIsEmpty.class)
+	public ResponseEntity<Response> FileIsEmpty(Exception e){
+		return new ResponseEntity<Response>(new Response(Integer.parseInt(message.Bad_Request)
+				,e.getMessage(),"Please Try Again"),HttpStatus.BAD_REQUEST);
 	}
 }

@@ -1,4 +1,5 @@
 package com.bridgelabz.fandoonotesapi.controller;
+
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,7 @@ import com.bridgelabz.fandoonotesapi.responce.Response;
 import com.bridgelabz.fandoonotesapi.service.UserService;
 /**
  * @author :- Krunal Parate
- * Purpose :- API Created By User Registration, User Login, Validation,Forgot Password,Reset Password.
+ * Purpose :- API Created
  */
 @RestController // return the data converted JSON Automatically
 @RequestMapping("/userapi")
@@ -71,7 +72,7 @@ public class UserController {
 	}
 	/**
 	 * Purpose :- Reset Password
-	 * @param token :- Varified the Token
+	 * @param token :- Verified the Token
 	 * @param resetPasswordDTO :- Access the resetPasswordDTO Data
 	 * @return :- Response
 	 */
@@ -92,7 +93,7 @@ public class UserController {
 	}
 	/**
 	 * Purpose :- Deleted Users
-	 * @param token :-Varified the Token
+	 * @param token :-Verified the Token
 	 * @param id :- Id of Person
 	 * @return :- Response
 	 */

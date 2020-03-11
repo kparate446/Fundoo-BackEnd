@@ -33,6 +33,7 @@ public class CollabratorController {
 	 * @param collabratorDto :- receive the mail Id
 	 * @return :- Response
 	 */
+	// Add Note id
 	@PostMapping("/createCollabrator/{id}")
 	public ResponseEntity<String> createCollabrator(@RequestHeader String token,@PathVariable int id,@RequestBody CollabratorDto collabratorDto){
 		Response response = service.createCollabrator(token, id, collabratorDto);

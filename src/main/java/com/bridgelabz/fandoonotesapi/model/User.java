@@ -24,6 +24,7 @@ public class User {
 	private String password;
 	private Date date = new Date();
 	private long phoneNo;
+	private String profilePic;
 	private boolean isValidate = false;
 
 	@OneToMany(mappedBy = "user")
@@ -43,6 +44,12 @@ public class User {
 	}
 	public void setNotes(List<Notes> notes) {
 		this.notes = notes;
+	}
+	public String getProfilePic() {
+		return profilePic;
+	}
+	public void setProfilePic(String profilePic) {
+		this.profilePic = profilePic;
 	}
 	public int getId() {
 		return id;

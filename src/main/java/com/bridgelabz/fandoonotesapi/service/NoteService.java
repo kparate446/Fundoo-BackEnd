@@ -11,9 +11,12 @@ public interface NoteService {
 	Response createNote(String token, CreateNoteDto createNoteDto);
 	Response updateNote(String token, UpdateNoteDto updateNoteDto, int id);
 	Response deleteNote(String token, int id);
-//	List<Notes> showAllNotes(int id,String token);
 	Response getNotes(String token);
 	Response sortByTitle(String token,String order);
 	Response sortByDescription(String token,String order);
 	Response sortByDate(String token,String order);
+	Response pinNotes(String token,int id);
+	Response trashedNotes(String token,int id);
+	Response archiveNotes(String token,int id);
+	Response findById(String token,int id);
 }
