@@ -17,9 +17,10 @@ import com.bridgelabz.fandoonotesapi.repository.NotesRepository;
 import com.bridgelabz.fandoonotesapi.repository.UserRepository;
 import com.bridgelabz.fandoonotesapi.responce.Response;
 import com.bridgelabz.fandoonotesapi.utility.JwtToken;
+
 /**
- * @author :- Krunal Parate
- * Purpose :-  Implementing the Create,Update,Delete Notes Implimentation
+ * @author :- Krunal Parate Purpose :- Implementing the Create,Update,Delete
+ *         Notes Implimentation
  */
 @Service
 public class NoteServiceImp implements NoteService {
@@ -33,7 +34,7 @@ public class NoteServiceImp implements NoteService {
 	private JwtToken jwtToken;
 	@Autowired
 	private MessageData messageData;
-	//	@Autowired
+	// @Autowired
 	private User user;
 	String message;
 
@@ -54,12 +55,12 @@ public class NoteServiceImp implements NoteService {
 			notes.setUser(user);//
 			notesRepository.save(notes);
 			return new Response(200, "Created Notes", token);
-		}
-		else {
+		} else {
 			System.out.println("Note Not Present");
 			throw new InvalidNoteException(messageData.Invalid_Note);
 		}
 	}
+
 	/** Updated Note */
 	public Response updateNote(String token, UpdateNoteDto updateNoteDto, int id) {
 		Notes notes = notesRepository.findById(id);
@@ -81,6 +82,7 @@ public class NoteServiceImp implements NoteService {
 			throw new InvalidNoteException(messageData.Invalid_Note);
 		}
 	}
+
 	/** Deleted Note */
 	public Response deleteNote(String token, int id) {
 		Notes notes = notesRepository.findById(id);
@@ -90,125 +92,140 @@ public class NoteServiceImp implements NoteService {
 		if (user == null) {
 			System.out.println("User Not Exit");
 			throw new InvalidUserException(messageData.Invalid_User);
-		} 
-		//		else if(user.getNotes()!=null) 
-		if (notes == null) { 
+		}
+		// else if(user.getNotes()!=null)
+		if (notes == null) {
 			return new Response(200, "Deleted Note Not present ", token);
-		} 
-		if(notes.getUser().getId()== user.getId()){/***/
+		}
+		if (notes.getUser().getId() == user.getId()) {/***/
 			notesRepository.deleteById(id);
 			return new Response(200, "Deleted Note Successfully", token);
-		}
-		else {
+		} else {
 			System.out.println("This Note does Not Belongs to Present");
 			throw new InvalidNoteException(messageData.Invalid_Note);
 		}
 	}
-	/**Show All Notes*/
-	public Response getNotes(String token){
-		//Notes notes = (Notes) notesRepository.findAll();
+
+	/** Show All Notes */
+	public Response getNotes(String token) {
+		// Notes notes = (Notes) notesRepository.findAll();
 		String email = jwtToken.getToken(token);
 		user = userRepository.findByEmail(email);
-		if(user == null) {
+		if (user == null) {
 			System.out.println("User Not Exit");
 			throw new InvalidUserException(messageData.Invalid_User);
-		} if(user.getNotes()!=null) {
-			List<Notes>note = notesRepository.findAll().stream().filter(e ->e.getUser().getId()==user.getId()).collect(Collectors.toList());
-			return	new Response(200, "Show the All Notes Successfully ", note);
+		}
+		if (user.getNotes() != null) {
+			List<Notes> note = notesRepository.findAll().stream().filter(e -> e.getUser().getId() == user.getId())
+					.collect(Collectors.toList());
+			return new Response(200, "Show the All Notes Successfully ", note);
 		}
 		throw new InvalidNoteException(messageData.Invalid_Note);
 	}
-	/**Sort By Title */
-	public Response sortByTitle(String token,String order){
-		//Notes notes = (Notes) notesRepository.findAll();
+
+	/** Sort By Title */
+	public Response sortByTitle(String token, String order) {
+		// Notes notes = (Notes) notesRepository.findAll();
 		String email = jwtToken.getToken(token);
-		String Desc="desc";
+		String Desc = "desc";
 		String Asc = "asc";
 		user = userRepository.findByEmail(email);
-		if(user == null) {
+		if (user == null) {
 			System.out.println("User Not Exit");
 			throw new InvalidUserException(messageData.Invalid_User);
-		} if(user.getNotes()!= null) {
-			if(Asc.equals(order)) {
-				List<Notes>note = notesRepository.findAll().stream().sorted((list1,list2)->list1.getTitle().compareTo(list2.getTitle())).collect(Collectors.toList());
-				//			List<Notes>note = notesRepository.findAll().stream().sorted((list2,list1)->list1.getTitle().compareTo(list2.getTitle())).collect(Collectors.toList());
-				return	new Response(200, "Sorted By Title in Ascending Order ", note);
-			}if(Desc.equals(order)) {
-				List<Notes>note = notesRepository.findAll().stream().sorted((list2,list1)->list1.getTitle().compareTo(list2.getTitle())).collect(Collectors.toList());
-				return	new Response(200, "Sorted By Title in Descending Order ", note);
+		}
+		if (user.getNotes() != null) {
+			if (Asc.equals(order)) {
+				List<Notes> note = notesRepository.findAll().stream()
+						.sorted((list1, list2) -> list1.getTitle().compareTo(list2.getTitle()))
+						.collect(Collectors.toList());
+				// List<Notes>note =
+				// notesRepository.findAll().stream().sorted((list2,list1)->list1.getTitle().compareTo(list2.getTitle())).collect(Collectors.toList());
+				return new Response(200, "Sorted By Title in Ascending Order ", note);
 			}
-			else {
+			if (Desc.equals(order)) {
+				List<Notes> note = notesRepository.findAll().stream()
+						.sorted((list2, list1) -> list1.getTitle().compareTo(list2.getTitle()))
+						.collect(Collectors.toList());
+				return new Response(200, "Sorted By Title in Descending Order ", note);
+			} else {
 				throw new InvalidOrderException(messageData.Invalid_Order);
 			}
 		}
 		throw new InvalidNoteException(messageData.Invalid_Note);
 	}
+
 	/** Sort By Description */
-	public Response sortByDescription(String token,String order) {
+	public Response sortByDescription(String token, String order) {
 		String email = jwtToken.getToken(token);
-		String Desc="desc";
+		String Desc = "desc";
 		String Asc = "asc";
 		user = userRepository.findByEmail(email);
-		if(user == null) {
+		if (user == null) {
 			throw new InvalidUserException(messageData.Invalid_User);
-		}	
-		if(user.getNotes()!=null) {
-			if(Asc.equals(order)) {
-				List<Notes>notes = notesRepository.findAll().stream().sorted((list1,list2)->list1.getDiscription().compareTo(list2.getDiscription()
-						)).collect(Collectors.toList());
+		}
+		if (user.getNotes() != null) {
+			if (Asc.equals(order)) {
+				List<Notes> notes = notesRepository.findAll().stream()
+						.sorted((list1, list2) -> list1.getDiscription().compareTo(list2.getDiscription()))
+						.collect(Collectors.toList());
 				return new Response(200, "Sorted By Description in Ascending Order ", notes);
 			}
-			if(Desc.equals(order)) {
-				List<Notes>notes = notesRepository.findAll().stream().sorted((list2,list1)->list1.getDiscription().compareTo(list2.getDiscription()
-						)).collect(Collectors.toList());
+			if (Desc.equals(order)) {
+				List<Notes> notes = notesRepository.findAll().stream()
+						.sorted((list2, list1) -> list1.getDiscription().compareTo(list2.getDiscription()))
+						.collect(Collectors.toList());
 				return new Response(200, "Sorted By Description in Descending Order ", notes);
-			}
-			else {
+			} else {
 				throw new InvalidOrderException(messageData.Invalid_Order);
 			}
 		}
 		throw new InvalidNoteException(messageData.Invalid_Note);
 	}
+
 	/** Sort By Date */
-	public Response sortByDate(String token,String order) {
+	public Response sortByDate(String token, String order) {
 		String email = jwtToken.getToken(token);
-		String Desc="desc";
+		String Desc = "desc";
 		String Asc = "asc";
 		user = userRepository.findByEmail(email);
-		if(user == null) {
+		if (user == null) {
 			throw new InvalidUserException(messageData.Invalid_User);
-		}	
-		if(user.getNotes()!=null) {
-			if(Asc.equals(order)) {
-				List<Notes>notes = notesRepository.findAll().stream().sorted((list1,list2)->list1.getDate().compareTo(list2.getDate())).collect(Collectors.toList());
+		}
+		if (user.getNotes() != null) {
+			if (Asc.equals(order)) {
+				List<Notes> notes = notesRepository.findAll().stream()
+						.sorted((list1, list2) -> list1.getDate().compareTo(list2.getDate()))
+						.collect(Collectors.toList());
 				return new Response(200, "Sorted By Date in Ascending Order ", notes);
 			}
-			if(Desc.equals(order)) {
-				List<Notes>notes = notesRepository.findAll().stream().sorted((list2,list1)->list1.getDate().compareTo(list2.getDate())).collect(Collectors.toList());
+			if (Desc.equals(order)) {
+				List<Notes> notes = notesRepository.findAll().stream()
+						.sorted((list2, list1) -> list1.getDate().compareTo(list2.getDate()))
+						.collect(Collectors.toList());
 				return new Response(200, "Sorted By Date in Descending Order ", notes);
-			}
-			else {
+			} else {
 				throw new InvalidOrderException(messageData.Invalid_Order);
 			}
 		}
 		throw new InvalidNoteException(messageData.Invalid_Note);
 	}
-	/** Pin & Unpin Notes*/
-	public Response pinNotes(String token,int id) {
+
+	/** Pin & Unpin Notes */
+	public Response pinNotes(String token, int id) {
 		Notes notes = notesRepository.findById(id);
 		String email = jwtToken.getToken(token);
 		user = userRepository.findByEmail(email);
-		if(user == null) {
+		if (user == null) {
 			throw new InvalidNoteException(messageData.Invalid_User);
 		}
-		if(user.getNotes()!=null) {
-			if(notes.getUser().getId()== user.getId()) {
-				if(notes.isPin()==false) {
+		if (notes != null) {
+			if (notes.getUser().getId() == user.getId()) {
+				if (notes.isPin() == false) {
 					notes.setPin(true);
 					notesRepository.save(notes);
 					return new Response(200, "Pin Note ", notes);
-				}
-				else {
+				} else {
 					notes.setPin(false);
 					notesRepository.save(notes);
 					return new Response(200, "Unpin Note", notes);
@@ -217,22 +234,23 @@ public class NoteServiceImp implements NoteService {
 		}
 		throw new InvalidNoteException(messageData.Invalid_Note);
 	}
-	/** Trashed & Restore Notes*/
-	public Response trashedNotes(String token,int id) {
+
+	/** Trashed & Restore Notes */
+	public Response trashedNotes(String token, int id) {
 		Notes notes = notesRepository.findById(id);
 		String email = jwtToken.getToken(token);
 		user = userRepository.findByEmail(email);
-		if(user == null) {
+		System.out.println(user.getId());
+		if (user == null) {
 			throw new InvalidNoteException(messageData.Invalid_User);
 		}
-		if(user.getNotes()!=null) {
-			if(notes.getUser().getId()== user.getId()) {//
-				if(notes.isTrash()==false) {
+		if (notes != null) {
+			if (notes.getUser().getId() == user.getId()) {//
+				if (notes.isTrash() == false) {
 					notes.setTrash(true);
 					notesRepository.save(notes);
 					return new Response(200, "Trashed Note ", notes);
-				}
-				else {
+				} else {
 					notes.setTrash(false);
 					notesRepository.save(notes);
 					return new Response(200, "Restored Note", notes);
@@ -241,22 +259,22 @@ public class NoteServiceImp implements NoteService {
 		}
 		throw new InvalidNoteException(messageData.Invalid_Note);
 	}
-	/** Archive & Unarchive*/
-	public Response archiveNotes(String token,int id) {
+
+	/** Archive & Unarchive */
+	public Response archiveNotes(String token, int id) {
 		Notes notes = notesRepository.findById(id);
 		String email = jwtToken.getToken(token);
 		user = userRepository.findByEmail(email);
-		if(user == null) {
+		if (user == null) {
 			throw new InvalidNoteException(messageData.Invalid_User);
 		}
-		if(user.getNotes()!=null) {
-			if(notes.getUser().getId()== user.getId()) {//
-				if(notes.isAchieve()==false) {
+		if (notes != null) {
+			if (notes.getUser().getId() == user.getId()) {//
+				if (notes.isAchieve() == false) {
 					notes.setAchieve(true);
 					notesRepository.save(notes);
 					return new Response(200, "Archive Note ", notes);
-				}
-				else {
+				} else {
 					notes.setAchieve(false);
 					notesRepository.save(notes);
 					return new Response(200, "Unarchive Note ", notes);
@@ -265,36 +283,39 @@ public class NoteServiceImp implements NoteService {
 		}
 		throw new InvalidNoteException(messageData.Invalid_Note);
 	}
-	/**Searching the notes Based on the Id*/
-	public Response findById(String token,int id){
+
+	/** Searching the notes Based on the Id */
+	public Response findById(String token, int id) {
 		Notes notes = notesRepository.findById(id);
 		String email = jwtToken.getToken(token);
 		user = userRepository.findByEmail(email);
-		if(user == null) {
+		if (user == null) {
 			System.out.println("User Not Exit");
 			throw new InvalidUserException(messageData.Invalid_User);
-		} if(user.getNotes()!=null) {
-			if(notes.getUser().getId()== user.getId()) {
-				//				List<Notes>note = notesRepository.findAll();
-				//			List<Notes>note = notesRepository.findAll().stream().filter(e ->e.getUser().getId()==user.getId()).collect(Collectors.toList());
-				return	new Response(200, " Searching the notes Based on the Id ", notesRepository.findById(id));//notesRepository.findById(id)
+		}
+		if (notes != null) {
+			if (notes.getUser().getId() == user.getId()) {
+				// List<Notes>note = notesRepository.findAll();
+				// List<Notes>note = notesRepository.findAll().stream().filter(e
+				// ->e.getUser().getId()==user.getId()).collect(Collectors.toList());
+				return new Response(200, " Searching the notes Based on the Id ", notesRepository.findById(id));// notesRepository.findById(id)
 			}
 		}
 		throw new InvalidNoteException(messageData.Invalid_Note);
 	}
-	/**Searching the notes Based on the Title
-	@SuppressWarnings("null")
-	public Response findByTitle(String token, String title) {
-		Notes notes = null;
-		String email = jwtToken.getToken(token);
-		user = userRepository.findByEmail(email);
-		if(user == null) {
-			throw new InvalidUserException(messageData.Invalid_User);
-		}
-		if(user.getNotes()!=null) {
-			if(notes.getTitle().equals(title)) {
-			}
-		}
-		return null;
-	}*/
+	/**
+	 * Searching the notes Based on the Title @SuppressWarnings("null") 
+	 * public Response findByTitle(String token, String title) {
+	 *  Notes notes = null;
+	 *   String email = jwtToken.getToken(token);
+	 *    user = userRepository.findByEmail(email);
+	 * if(user == null) { 
+	 * throw new InvalidUserException(messageData.Invalid_User);
+	 * } 
+	 * if(user.getNotes()!=null) {
+	 * if(notes.getTitle().equals(title)) {
+	 *  } }
+	 *   return null; 
+	 *   }
+	 */
 }

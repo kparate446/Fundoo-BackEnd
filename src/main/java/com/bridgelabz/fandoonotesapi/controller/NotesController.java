@@ -24,7 +24,7 @@ import com.bridgelabz.fandoonotesapi.service.NoteService;
 @RestController 
 @RequestMapping("/notesapi")
 public class NotesController {
-	@Autowired // Declaired the Dependency
+	@Autowired // Declared the Dependency
 	private NoteService service;
 	/**
 	 * Purpose :- Created the Note
