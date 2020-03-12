@@ -6,14 +6,17 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.bridgelabz.fandoonotesapi.dto.CreateNoteDto;
+import com.bridgelabz.fandoonotesapi.dto.ReminderDto;
 import com.bridgelabz.fandoonotesapi.dto.UpdateNoteDto;
 import com.bridgelabz.fandoonotesapi.exception.InvalidNoteException;
 import com.bridgelabz.fandoonotesapi.exception.InvalidOrderException;
 import com.bridgelabz.fandoonotesapi.exception.InvalidUserException;
 import com.bridgelabz.fandoonotesapi.message.MessageData;
 import com.bridgelabz.fandoonotesapi.model.Notes;
+import com.bridgelabz.fandoonotesapi.model.Reminder;
 import com.bridgelabz.fandoonotesapi.model.User;
 import com.bridgelabz.fandoonotesapi.repository.NotesRepository;
+import com.bridgelabz.fandoonotesapi.repository.ReminderRepository;
 import com.bridgelabz.fandoonotesapi.repository.UserRepository;
 import com.bridgelabz.fandoonotesapi.responce.Response;
 import com.bridgelabz.fandoonotesapi.utility.JwtToken;
@@ -36,6 +39,8 @@ public class NoteServiceImp implements NoteService {
 	private MessageData messageData;
 	// @Autowired
 	private User user;
+	@Autowired
+	private ReminderRepository reminderRepository;
 	String message;
 
 	/** Create Note */
@@ -295,9 +300,6 @@ public class NoteServiceImp implements NoteService {
 		}
 		if (notes != null) {
 			if (notes.getUser().getId() == user.getId()) {
-				// List<Notes>note = notesRepository.findAll();
-				// List<Notes>note = notesRepository.findAll().stream().filter(e
-				// ->e.getUser().getId()==user.getId()).collect(Collectors.toList());
 				return new Response(200, " Searching the notes Based on the Id ", notesRepository.findById(id));// notesRepository.findById(id)
 			}
 		}
@@ -318,4 +320,45 @@ public class NoteServiceImp implements NoteService {
 	 *   return null; 
 	 *   }
 	 */
+
+	/** Add Reminder */
+	public Response createReminder(String token, ReminderDto reminderDto, int id) {
+		String email = jwtToken.getToken(token);
+		user = userRepository.findByEmail(email);
+		Notes notes = notesRepository.findById(id);
+		System.out.println(token);
+		if (user == null) {
+			System.out.println("Note Not Present");
+			throw new InvalidUserException(messageData.Invalid_User);
+		}
+		if(notes ==null) {
+			throw new InvalidNoteException(messageData.Invalid_Note);
+		}
+		if (notes.getReminder() == null) {
+			Reminder reminder= mapper.map(reminderDto, Reminder.class);
+			reminder.setDateAndTime(reminderDto.getDateAndTime());
+			reminder.setNotes(notes);// Add the User Id
+			reminderRepository.save(reminder);
+			return new Response(200, "Reminder", "Success");
+		} else {
+			return new Response(400, "Reminder already present", "False");
+		}
+	}
+	/** Delete Reminder*/
+	public Response deleteReminder(String token,int id) {
+		String email = jwtToken.getToken(token);
+		user = userRepository.findByEmail(email);
+		System.out.println(token);
+		if (user == null) {
+			System.out.println("Note Not Present");
+			throw new InvalidUserException(messageData.Invalid_User);
+		}
+		if (reminderRepository.findById(id) != null) {
+			reminderRepository.deleteById(reminderRepository.findById(id).getId());
+			return new Response(200, "Reminder Deleted Successfully", token);
+		} else {
+			return new Response(400, "Invalid Reminder", "False");
+		}
+	}
+
 }

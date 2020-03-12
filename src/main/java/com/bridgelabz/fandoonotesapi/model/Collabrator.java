@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  *
  */
 @Entity
-@Table(name = "collabratorDetail")
+@Table(name = "collabratorDetails")
 @JsonIgnoreProperties({"notes"})
 public class Collabrator {
 	@Id

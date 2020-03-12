@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.bridgelabz.fandoonotesapi.dto.CreateNoteDto;
+import com.bridgelabz.fandoonotesapi.dto.ReminderDto;
 import com.bridgelabz.fandoonotesapi.dto.UpdateNoteDto;
 import com.bridgelabz.fandoonotesapi.responce.Response;
 import com.bridgelabz.fandoonotesapi.service.NoteService;
@@ -147,6 +148,30 @@ public class NotesController {
 	@PostMapping("/findById/{id}")
 	public ResponseEntity<Response> findById(@RequestHeader String token ,@PathVariable int id){
 		Response response = service.findById(token, id);
+		return new ResponseEntity<Response>(response,HttpStatus.OK);
+	}
+	/**
+	 * Purpose :- Add Reminder
+	 * @param token :- Verified the Token
+	 * @param reminderDto :- Getting the Date and time
+	 * @param id :- Which Note add the Remider
+	 * @return :- Response
+	 */
+	@PostMapping("/addReminder/{id}")
+	public ResponseEntity<Response> addReminder(@RequestHeader String token ,@RequestBody ReminderDto reminderDto,@PathVariable int id){
+		Response response = service.createReminder(token, reminderDto, id);
+		return new ResponseEntity<Response>(response,HttpStatus.OK);
+	}
+
+	/**
+	 * Purpose :- Delete Reminder
+	 * @param token :- Verified the token
+	 * @param id :- Which reminder Deleted
+	 * @return :- Response
+	 */
+	@DeleteMapping("/deleteReminder/{id}")
+	public ResponseEntity<Response> deleteReminder(@RequestHeader String token ,@PathVariable int id){
+		Response response = service.deleteReminder(token, id);
 		return new ResponseEntity<Response>(response,HttpStatus.OK);
 	}
 }

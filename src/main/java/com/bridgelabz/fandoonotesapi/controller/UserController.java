@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import com.bridgelabz.fandoonotesapi.dto.ForgotPasswordDTO;
 import com.bridgelabz.fandoonotesapi.dto.LoginDTO;
 import com.bridgelabz.fandoonotesapi.dto.RegistrationDTO;
@@ -85,10 +86,10 @@ public class UserController {
 	 * Purpose :- Getting All Users
 	 * @return :- Response
 	 */
-	@GetMapping("/getUsers")
+	@GetMapping("/getusers")
 	public ResponseEntity<Response> getUsers() 
 	{
-		Response response= service.getLabels();
+		Response response= service.getUsers();
 		return new ResponseEntity<Response>(response,HttpStatus.OK);
 	}
 	/**
@@ -97,9 +98,30 @@ public class UserController {
 	 * @param id :- Id of Person
 	 * @return :- Response
 	 */
-	@DeleteMapping("/deleteUser/{id}")
+	@DeleteMapping("/deleteuser/{id}")
 	public ResponseEntity<String> deleteUser(@RequestHeader String token,@PathVariable  int id){
 		Response response = service.deleteUsers(token,id);
+		return new ResponseEntity<String>(response.getMessage(),HttpStatus.OK);
+	}
+	/**
+	 * Purpose :- Signout the User
+	 * @param token :- Verified the Token
+	 * @return :- Response
+	 */
+	@PostMapping("/signout")
+	public ResponseEntity<String> signoutUser(@Valid @RequestHeader String token) {
+		Response response = service.signOut(token);
+		return new ResponseEntity<String>(response.getMessage(),HttpStatus.OK);
+	}
+	/**
+	 * Purpose :- Uploaded the Profile Picture
+	 * @param token :- Verified the Token
+	 * @param file :- 
+	 * @return :- Response
+	 */
+	@PostMapping("/uploadedProfile")
+	public ResponseEntity<String> uploadedProfile(@RequestHeader String token,@RequestHeader MultipartFile file){
+		Response response = service.uploadProfilePic(token, file);
 		return new ResponseEntity<String>(response.getMessage(),HttpStatus.OK);
 	}
 }

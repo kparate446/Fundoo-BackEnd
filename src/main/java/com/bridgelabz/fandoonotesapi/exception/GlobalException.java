@@ -5,10 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
 import com.bridgelabz.fandoonotesapi.message.MessageData;
 import com.bridgelabz.fandoonotesapi.responce.Response;
-
 /**
  * @author :- Krunal Parate
  * Purpose :- Global Exception

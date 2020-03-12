@@ -26,6 +26,12 @@
 			<artifactId>cloudinary-http44</artifactId>
 			<version>1.25.0</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-core -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-core</artifactId>
+			<version>5.2.2.RELEASE</version>
+		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
 		<!-- Mockito -->

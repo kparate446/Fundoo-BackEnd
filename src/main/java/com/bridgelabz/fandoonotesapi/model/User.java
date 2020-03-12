@@ -13,7 +13,7 @@ import javax.persistence.Table;
  * Purpose :- User POJO Class & userInformation Table Created
  */
 @Entity
-@Table(name = "userInformation")
+@Table(name = "userDetails")
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -26,6 +26,7 @@ public class User {
 	private long phoneNo;
 	private String profilePic;
 	private boolean isValidate = false;
+	private boolean signOut = false;
 
 	@OneToMany(mappedBy = "user")
 	private List<Labels>labels = new ArrayList<Labels>();
@@ -42,6 +43,7 @@ public class User {
 	public List<Notes> getNotes() {
 		return notes;
 	}
+	
 	public void setNotes(List<Notes> notes) {
 		this.notes = notes;
 	}
@@ -51,6 +53,14 @@ public class User {
 	public void setProfilePic(String profilePic) {
 		this.profilePic = profilePic;
 	}
+	
+	public boolean isSignOut() {
+		return signOut;
+	}
+	public void setSignOut(boolean signOut) {
+		this.signOut = signOut;
+	}
+	
 	public int getId() {
 		return id;
 	}
@@ -81,7 +91,7 @@ public class User {
 	public String getEmail() {
 		return email;
 	}
-	public void setEmail(String email) {
+	public void setEmail( String email) {
 		this.email = email;
 	}
 	public String getPassword() {

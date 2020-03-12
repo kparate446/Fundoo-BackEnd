@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -57,6 +58,15 @@ public class Notes {
 	public void setDate(Date date) {
 		this.date = date;
 	}
+	@OneToOne(mappedBy = "notes")
+	private Reminder reminder;
+	
+	public Reminder getReminder() {
+		return reminder;
+	}
+	public void setReminder(Reminder reminder) {
+		this.reminder = reminder;
+	}
 	// Mapped Collabrator to Notes
 	@OneToMany(mappedBy = "notes")
 	private List<Collabrator>collabrators = new ArrayList<Collabrator>();
@@ -101,5 +111,5 @@ public class Notes {
 	@Override
 	public String toString() {
 		return "Notes [id=" + id + ", title=" + title + ", discription=" + discription + "]";
-	}
+	}	
 }

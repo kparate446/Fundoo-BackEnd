@@ -1,6 +1,7 @@
 package com.bridgelabz.fandoonotesapi.service;
 
 import com.bridgelabz.fandoonotesapi.dto.CreateNoteDto;
+import com.bridgelabz.fandoonotesapi.dto.ReminderDto;
 import com.bridgelabz.fandoonotesapi.dto.UpdateNoteDto;
 import com.bridgelabz.fandoonotesapi.responce.Response;
 /**
@@ -19,4 +20,6 @@ public interface NoteService {
 	Response trashedNotes(String token,int id);
 	Response archiveNotes(String token,int id);
 	Response findById(String token,int id);
+	Response createReminder(String token, ReminderDto reminderDto, int id);
+	Response deleteReminder(String token,int id);
 }
