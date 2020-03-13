@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
@@ -28,6 +29,16 @@ public class Labels {
 	@JoinColumn(name = "userId",nullable = false)
 	private User user;
 	
+//	@ManyToMany
+//	@JoinColumn(name = "notesId" , nullable = false)
+//	private Notes notes;
+//	// Mapping with Notes to Labels
+//	public Notes getNotes() {
+//		return notes;
+//	}
+//	public void setNotes(Notes notes) {
+//		this.notes = notes;
+//	}
 	public User getUser() {
 		return user;
 	}

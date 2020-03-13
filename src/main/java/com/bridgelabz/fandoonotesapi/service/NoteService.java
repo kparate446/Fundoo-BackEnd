@@ -22,4 +22,6 @@ public interface NoteService {
 	Response findById(String token,int id);
 	Response createReminder(String token, ReminderDto reminderDto, int id);
 	Response deleteReminder(String token,int id);
+	Response updateReminder(String token, ReminderDto reminderDto, int id);
+	Response getReminder(String token);
 }

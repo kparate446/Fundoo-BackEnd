@@ -70,4 +70,14 @@ public class GlobalException {
 		return new ResponseEntity<Response>(new Response(Integer.parseInt(message.Bad_Request)
 				,e.getMessage(),"Please Try Again"),HttpStatus.BAD_REQUEST);
 	}
+	@ExceptionHandler(InvalidReminderException.class)
+	public ResponseEntity<Response> InvalidReminderException(Exception e){
+		return new ResponseEntity<Response>(new Response(Integer.parseInt(message.Bad_Request)
+				,e.getMessage(),"Please Try Again"),HttpStatus.BAD_REQUEST);
+	}
+	@ExceptionHandler(ReminderAlreadyPresentException.class)
+	public ResponseEntity<Response> ReminderAlreadyPresentException(Exception e){
+		return new ResponseEntity<Response>(new Response(Integer.parseInt(message.Bad_Request)
+				,e.getMessage(),"Please Try Again"),HttpStatus.BAD_REQUEST);
+	}
 }

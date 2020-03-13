@@ -10,7 +10,9 @@ import com.bridgelabz.fandoonotesapi.dto.ReminderDto;
 import com.bridgelabz.fandoonotesapi.dto.UpdateNoteDto;
 import com.bridgelabz.fandoonotesapi.exception.InvalidNoteException;
 import com.bridgelabz.fandoonotesapi.exception.InvalidOrderException;
+import com.bridgelabz.fandoonotesapi.exception.InvalidReminderException;
 import com.bridgelabz.fandoonotesapi.exception.InvalidUserException;
+import com.bridgelabz.fandoonotesapi.exception.ReminderAlreadyPresentException;
 import com.bridgelabz.fandoonotesapi.message.MessageData;
 import com.bridgelabz.fandoonotesapi.model.Notes;
 import com.bridgelabz.fandoonotesapi.model.Reminder;
@@ -20,10 +22,9 @@ import com.bridgelabz.fandoonotesapi.repository.ReminderRepository;
 import com.bridgelabz.fandoonotesapi.repository.UserRepository;
 import com.bridgelabz.fandoonotesapi.responce.Response;
 import com.bridgelabz.fandoonotesapi.utility.JwtToken;
-
 /**
- * @author :- Krunal Parate Purpose :- Implementing the Create,Update,Delete
- *         Notes Implimentation
+ * @author :- Krunal Parate 
+ * Purpose :- Implementing the API
  */
 @Service
 public class NoteServiceImp implements NoteService {
@@ -100,7 +101,7 @@ public class NoteServiceImp implements NoteService {
 		}
 		// else if(user.getNotes()!=null)
 		if (notes == null) {
-			return new Response(200, "Deleted Note Not present ", token);
+			throw new InvalidNoteException(messageData.Invalid_Note);
 		}
 		if (notes.getUser().getId() == user.getId()) {/***/
 			notesRepository.deleteById(id);
@@ -328,7 +329,6 @@ public class NoteServiceImp implements NoteService {
 		Notes notes = notesRepository.findById(id);
 		System.out.println(token);
 		if (user == null) {
-			System.out.println("Note Not Present");
 			throw new InvalidUserException(messageData.Invalid_User);
 		}
 		if(notes ==null) {
@@ -341,7 +341,7 @@ public class NoteServiceImp implements NoteService {
 			reminderRepository.save(reminder);
 			return new Response(200, "Reminder", "Success");
 		} else {
-			return new Response(400, "Reminder already present", "False");
+			throw new ReminderAlreadyPresentException(messageData.Reminder_Already_Present);
 		}
 	}
 	/** Delete Reminder*/
@@ -355,10 +355,44 @@ public class NoteServiceImp implements NoteService {
 		}
 		if (reminderRepository.findById(id) != null) {
 			reminderRepository.deleteById(reminderRepository.findById(id).getId());
-			return new Response(200, "Reminder Deleted Successfully", token);
+			return new Response(200, "Reminder Deleted Successfully", "Success");
 		} else {
-			return new Response(400, "Invalid Reminder", "False");
+			throw new InvalidReminderException(messageData.Invalid_Reminder);
 		}
 	}
-
+	/** Update Reminder*/
+	@SuppressWarnings("unused")
+	public Response updateReminder(String token, ReminderDto reminderDto, int id) {
+		String email = jwtToken.getToken(token);
+		user = userRepository.findByEmail(email);
+		Reminder reminder = reminderRepository.findById(id);
+		System.out.println(token);
+		if (user == null) {
+			throw new InvalidUserException(messageData.Invalid_User);
+		}
+		if(reminder ==null) {
+			throw new InvalidReminderException(messageData.Invalid_Reminder);
+		}
+		if (reminder!= null) {
+			reminder.setDateAndTime(reminderDto.getDateAndTime());
+			reminderRepository.save(reminder);
+			return new Response(200, "Updated Reminder", "Successfully");
+		}
+		throw new InvalidReminderException(messageData.Invalid_Reminder);
+	}
+	/** Show Reminder*/
+	public Response getReminder(String token) {
+		// Notes notes = (Notes) notesRepository.findAll();
+		String email = jwtToken.getToken(token);
+		user = userRepository.findByEmail(email);
+		if (user == null) {
+			System.out.println("User Not Exit");
+			throw new InvalidUserException(messageData.Invalid_User);
+		}
+		if (user.getNotes() != null) {
+			List<Reminder> reminder = reminderRepository.findAll();
+			return new Response(200, "Show the All Reminder Successfully ", reminder);
+		}
+		throw new InvalidReminderException(messageData.Invalid_Reminder);
+	}
 }

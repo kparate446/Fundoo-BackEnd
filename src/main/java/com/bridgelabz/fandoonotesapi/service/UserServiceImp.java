@@ -233,8 +233,8 @@ public class UserServiceImp implements UserService {
 			e.printStackTrace();
 		}
 		// Connection of Closet cloudinary properties
-		Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap("cloud_name", "dg7m3whxu", "api_key",
-				"662363956759336", "api_secret", "znXxkQ9ODQo-Z6FjiW8lyZ0JP5A"));
+		Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap("cloud_name", "dmlqjysiv", "api_key",
+				"242443158528625", "api_secret", "q9p9sxtwVI-kSM5CVt-Yrc4_B0c"));
 		Map<?, ?> uploadProfile;
 		try {
 			// this upload the image on cloudinary ->Query -> Mapped

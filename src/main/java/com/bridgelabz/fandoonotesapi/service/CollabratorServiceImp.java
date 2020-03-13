@@ -61,11 +61,19 @@ public class CollabratorServiceImp implements CollabratorService {
 		if (notes == null) {
 			throw new InvalidNoteException(messageData.Invalid_Note);
 		}
+		// Check the User Sender Mail and Receiver Mail are same. 
 		for (Collabrator collabrator1 : notes.getCollabrators()) {
-			if (collabrator1.getMailReceiver().equals(collabratorDto.getMailReceiver())) { /// ***
+			if (collabrator1.getMailSender().equals(collabratorDto.getMailReceiver())){ /// ***
 				throw new ReceiverMailAlreadyPresentException(messageData.ReceiverMail_Already_Present);
 			}
 		}
+		// Check the Collabrator are Already Present. 
+		for (Collabrator collabrator1 : notes.getCollabrators()) {
+			if (collabrator1.getMailReceiver().equals(collabratorDto.getMailReceiver())){ /// ***
+				throw new ReceiverMailAlreadyPresentException(messageData.ReceiverMail_Already_Present);
+			}
+		}
+		//if(!notes.getUser().getEmail().equals(userRepository.findByEmail(email)))
 		if (notes.getUser().getId() == userRepository.findByEmail(email).getId()) {
 			collabrator.setMailReceiver(collabratorDto.getMailReceiver());
 			collabrator.setMailSender(user1.getEmail());

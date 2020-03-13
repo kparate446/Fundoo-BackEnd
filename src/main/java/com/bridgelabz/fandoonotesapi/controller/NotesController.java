@@ -174,4 +174,27 @@ public class NotesController {
 		Response response = service.deleteReminder(token, id);
 		return new ResponseEntity<Response>(response,HttpStatus.OK);
 	}
+	/**
+	 * Purpose :- Updated Reminder
+	 * @param token :- Verified the token
+	 * @param reminderDto :- Update the Date and time
+	 * @param id :- Which remider are updated
+	 * @return :- Response
+	 */
+	@PutMapping("/updateReminder/{id}")
+	public ResponseEntity<Response> updateReminder(@RequestHeader String token ,@RequestBody ReminderDto reminderDto,@PathVariable int id){
+		Response response = service.updateReminder(token, reminderDto, id);
+		return new ResponseEntity<Response>(response,HttpStatus.OK);
+	}
+	/**
+	 * Purpose :- Show all Reminder
+	 * @param token :- Verified the Token 
+	 * @return :- Response
+	 */
+	@GetMapping("/getReminder")
+	public ResponseEntity<Response> showAllReminder(@RequestHeader String token) 
+	{
+		Response response = service.getReminder(token);
+		return new ResponseEntity<Response>(response,HttpStatus.OK);
+	}
 }

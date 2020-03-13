@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -37,27 +38,15 @@ public class Notes {
 	private boolean isAchieve = false;
 	private boolean isPin = false;
 	
-	public boolean isTrash() {
-		return isTrash;
-	}
-	public void setTrash(boolean isTrash) {
-		this.isTrash = isTrash;
-	}
-	public boolean isAchieve() {
-		return isAchieve;
-	}
-	public void setAchieve(boolean isAchieve) {
-		this.isAchieve = isAchieve;
-	}
-	public boolean isPin() {
-		return isPin;
-	}
-	public void setPin(boolean isPin) {
-		this.isPin = isPin;
-	}
-	public void setDate(Date date) {
-		this.date = date;
-	}
+//	@ManyToMany(mappedBy = "labels")
+//	private Labels labels;
+//	
+//	public Labels getLabels() {
+//		return labels;
+//	}
+//	public void setLabels(Labels labels) {
+//		this.labels = labels;
+//	}
 	@OneToOne(mappedBy = "notes")
 	private Reminder reminder;
 	
@@ -87,6 +76,28 @@ public class Notes {
 	public void setUser(User user) {
 		this.user = user;
 	}
+	public boolean isTrash() {
+		return isTrash;
+	}
+	public void setTrash(boolean isTrash) {
+		this.isTrash = isTrash;
+	}
+	public boolean isAchieve() {
+		return isAchieve;
+	}
+	public void setAchieve(boolean isAchieve) {
+		this.isAchieve = isAchieve;
+	}
+	public boolean isPin() {
+		return isPin;
+	}
+	public void setPin(boolean isPin) {
+		this.isPin = isPin;
+	}
+	public void setDate(Date date) {
+		this.date = date;
+	}
+	
 	public int getId() {
 		return id;
 	}
