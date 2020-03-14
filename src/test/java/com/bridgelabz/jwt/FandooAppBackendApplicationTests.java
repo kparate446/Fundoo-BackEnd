@@ -13,7 +13,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.bridgelabz.fandoonotesapi.model.User;
+import com.bridgelabz.fundoonotesapi.model.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.mail.iap.Response;
 
