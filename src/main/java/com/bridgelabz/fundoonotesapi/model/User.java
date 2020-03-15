@@ -27,7 +27,7 @@ public class User {
 	private String profilePic;
 	private boolean isValidate = false;
 	private boolean signOut = false;
-
+	
 	@OneToMany(mappedBy = "user")
 	private List<Labels>labels = new ArrayList<Labels>();
 	public List<Labels> getLabels() {

@@ -18,7 +18,7 @@ public class RegistrationDTO  {
 	@Email(message = "Email should be valid")
 	private String email;
 	@NotEmpty
-	@Size(min = 2, max = 30)
+//	@Size(min = 2, max = 30)
 	private String password;
 //	@NotBlank(message = "Please provide a Mobile Number")
 //	/*@Size(min=0,max=10)*/

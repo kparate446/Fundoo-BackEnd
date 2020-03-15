@@ -35,7 +35,7 @@ import com.cloudinary.utils.ObjectUtils;
 import com.sun.istack.logging.Logger;
 		/**
  * @Created By :- krunal Parate
- * @Purpose :- Implement the Login,Registration,Forgot & ResetPassword
+ * @Purpose :- Implement the API
  */
 @Service // Injecting the other class
 public class UserServiceImp implements UserService {
@@ -123,7 +123,7 @@ public class UserServiceImp implements UserService {
 					return new Response(200, "login success", token);
 				}else {
 					LOGGER.info("User Already login");
-					return new Response(200, "User Already login", "LOGIN");
+					return new Response(200, "User Already login", token);
 				}
 			} else {
 				LOGGER.warning("Invalid Password");
