@@ -199,9 +199,10 @@ public class NotesController {
 		return new ResponseEntity<Response>(response,HttpStatus.OK);
 	}
 	/**
-	 * @param token :-
-	 * @param title
-	 * @return
+	 * Purpose :-Searching the notes Based on the Title
+	 * @param token :- Verified the Token 
+	 * @param title 
+	 * @return :- Response
 	 */
 	@GetMapping("/findByTitle/{title}")
 	public ResponseEntity<Response> findByTitle(@RequestHeader String token ,@PathVariable String title){
@@ -209,13 +210,36 @@ public class NotesController {
 		return new ResponseEntity<Response>(response,HttpStatus.OK);
 	}
 	/**
-	 * @param token :- 
-	 * @param discription
-	 * @return
+	 * Purpose :- Searching the notes Based on the Discription
+	 * @param token :- Verified the Token 
+	 * @param discription 
+	 * @return :- Response
 	 */
 	@GetMapping("/findByDiscription/{discription}")
 	public ResponseEntity<Response> findByDiscription(@RequestHeader String token ,@PathVariable String discription){
 		Response response = service.findByDiscription(token, discription);
+		return new ResponseEntity<Response>(response,HttpStatus.OK);
+	}
+	/**************************Elastic Search********************************/
+	/**
+	 * Purpose :- Searching the notes Based on the Id
+	 * @param noteId :- Which id you want
+	 * @return :- Response
+	 * @throws Exception 
+	 */
+	@GetMapping("/findByElasticId")
+	public ResponseEntity<Response> findByElasticId(@RequestHeader String noteId) throws Exception{
+		Response response = service.findByIdElasticSearch(noteId);
+		return new ResponseEntity<Response>(response,HttpStatus.OK);
+	}
+	/**
+	 * @param discription
+	 * @return
+	 * @throws Exception
+	 */
+	@GetMapping("/findByElasticDiscription")
+	public ResponseEntity<Response> findByElasticTitle(@RequestHeader String discription) throws Exception{
+		Response response = service.findByDiscriptionElasticSearch(discription);
 		return new ResponseEntity<Response>(response,HttpStatus.OK);
 	}
 }

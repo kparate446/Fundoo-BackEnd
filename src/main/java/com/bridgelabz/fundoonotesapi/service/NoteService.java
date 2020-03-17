@@ -26,4 +26,7 @@ public interface NoteService {
 	Response getReminder(String token);
 	Response findByTitle(String token, String Title);
 	Response findByDiscription(String token, String discription);
+	
+	Response findByIdElasticSearch(String id) throws Exception;
+	Response findByDiscriptionElasticSearch(String discription) throws Exception;
 }

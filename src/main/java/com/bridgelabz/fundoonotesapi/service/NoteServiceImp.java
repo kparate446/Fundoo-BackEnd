@@ -1,6 +1,5 @@
 package com.bridgelabz.fundoonotesapi.service;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
@@ -26,7 +25,8 @@ import com.bridgelabz.fundoonotesapi.responce.Response;
 import com.bridgelabz.fundoonotesapi.utility.JwtToken;
 import com.sun.istack.logging.Logger;
 /**
- * @author :- Krunal Parate Purpose :- Implementing the API
+ * @author :- Krunal Parate 
+ * 	Purpose :- Implementing the API
  */
 @Service
 public class NoteServiceImp implements NoteService {
@@ -47,7 +47,7 @@ public class NoteServiceImp implements NoteService {
 	private ReminderRepository reminderRepository;
 	@Autowired 
 	ElasticSearchServiceImp elasticSearchServiceImp;
-	
+
 	String message;
 	private static final Logger LOGGER = Logger.getLogger(NoteServiceImp.class);
 
@@ -429,8 +429,8 @@ public class NoteServiceImp implements NoteService {
 
 	/** Searching the notes Based on the Title **/
 	public Response findByTitle(String token, String title) {
-		//				List<Notes> notes= notesRepository.findAll();
-		Notes notes = notesRepository.findByTitle(title);
+		List<Notes> notes= notesRepository.findAll();
+		//		Notes notes = notesRepository.findByTitle(title);
 		String email = jwtToken.getToken(token);
 		user = userRepository.findByEmail(email);
 		if (user == null) {	
@@ -438,27 +438,27 @@ public class NoteServiceImp implements NoteService {
 			throw new InvalidUserException(messageData.Invalid_User);
 		}
 		if (notes != null) {
-			// It is Used in Title Search for letters
-			//			List<Notes>list = notes.stream().filter(note ->  { 
-			//				if (note.getTitle().contains(title));
-			//				return true;
-			//			}).collect(Collectors.toList());
-			//			return new Response(200," Searching the notes Based on the Title",list);
-			if (notes.getTitle().equals(title)) {
-				LOGGER.info("Successfully Searching the notes based on the Title");
-				return new Response(200, " Searching the notes based on the Title", notesRepository.findByTitle(title));// notesRepository.findById(id)
-			} else {
-				LOGGER.warning("Title Not Present");
-				throw new InvalidTitleException(messageData.Invalid_Title);
-			}
+			//It is Used in Title Search for letters
+			List<Notes>list = notes.stream().filter(note ->   
+			note.getTitle().contains(title)).
+					collect(Collectors.toList());
+			return new Response(200," Searching the notes Based on the Title",list);
+			//			if (notes.getTitle().equals(title)) {
+			//				LOGGER.info("Successfully Searching the notes based on the Title");
+			//				return new Response(200, " Searching the notes based on the Title", notesRepository.findByTitle(title));// notesRepository.findById(id)
+			//			} else {
+			//				LOGGER.warning("Title Not Present");
+			//				throw new InvalidTitleException(messageData.Invalid_Title);
+			//			}
 		}
 		LOGGER.warning("Note not present");
 		throw new InvalidNoteException(messageData.Invalid_Note);
 	}
+	/** 
 
 	/** Searching the notes Based on the Discription */
 	public Response findByDiscription(String token, String discription) {
-		Notes notes= notesRepository.findByDiscription(discription);
+		List<Notes> notes= notesRepository.findAll();
 		String email = jwtToken.getToken(token);
 		user = userRepository.findByEmail(email);
 		if (user == null) {	
@@ -466,13 +466,32 @@ public class NoteServiceImp implements NoteService {
 			throw new InvalidUserException(messageData.Invalid_User);
 		}
 		if (notes != null) {
-			if (notes.getDiscription().equals(discription)) {
-				LOGGER.info("Successfully Searching the notes based on the Discription");
-				return new Response(200, " Searching the notes based on the Discription", notesRepository.findByDiscription(discription));
-			} else {
-				LOGGER.warning("Discription not present");
-				return new Response(400, "Discription not present", false);
-			}
+			List<Notes>list = notes.stream().filter(note ->   
+			note.getTitle().contains(discription)).
+					collect(Collectors.toList());
+			return new Response(200," Searching the notes Based on the Title",list);
+		}
+		LOGGER.warning("Discription not present");
+		return new Response(400, "Discription not present", false);
+	}
+
+	/** Searching the Elastic notes Based on the Id*/
+	public Response findByIdElasticSearch(String id) throws Exception {
+		return new Response(200, " Searching the notes Based on the Id ", elasticSearchServiceImp.findById(id));// notesRepository.findById(id)
+	}
+	/** Searching the notes Based on the Discription
+	 * @throws Exception */
+	public Response findByDiscriptionElasticSearch(String discription) throws Exception {
+		List<Notes> notes= elasticSearchServiceImp.searchByTitle(discription);
+		if (user == null) {	
+			LOGGER.warning("Invalid user");
+			throw new InvalidUserException(messageData.Invalid_User);
+		}
+		if (notes != null) {
+			List<Notes>list = notes.stream().filter(note ->   
+			note.getTitle().contains(discription)).
+					collect(Collectors.toList());
+			return new Response(200," Searching the notes Based on the Title",list);
 		}
 		LOGGER.warning("Discription not present");
 		return new Response(400, "Discription not present", false);

@@ -3,6 +3,8 @@ package com.bridgelabz.fundoonotesapi.service;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+
 import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
@@ -36,13 +38,13 @@ public class ElasticSearchServiceImp {
 		this.objectMapper = objectMapper;
 	}
 
-	private String index = "Elasticsearch";
+	private String index = "elasticsearch";
 	private String type = "createnote";
 	/** Create Note*/
 	@SuppressWarnings("unchecked")
 	public void createNote(Notes notes) throws IOException {
 		Map<String, Object> mapper = objectMapper.convertValue(notes, Map.class);
-		IndexRequest indexRequest = new IndexRequest(index, type, String.valueOf(notes.getId())).source(mapper);
+		IndexRequest indexRequest = new IndexRequest(index, type, UUID.randomUUID().toString()).source(mapper);
 	System.out.println("client request"+client);
 	System.out.println("index request"+ indexRequest);
 		client.index(indexRequest, RequestOptions.DEFAULT);
