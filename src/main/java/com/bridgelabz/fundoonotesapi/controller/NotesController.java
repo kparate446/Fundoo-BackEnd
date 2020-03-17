@@ -35,7 +35,7 @@ public class NotesController {
 	 * @return :- Response
 	 */
 	@PostMapping("/createNote")
-	public ResponseEntity<String> createNote(@RequestHeader String token,@Valid @RequestBody CreateNoteDto createNoteDto){
+	public ResponseEntity<String> createNote(@RequestHeader String token,@Valid @RequestBody CreateNoteDto createNoteDto) throws Exception{
 		Response response = service.createNote(token,createNoteDto);
 		return new ResponseEntity<String>(response.getMessage(),HttpStatus.OK);
 	}

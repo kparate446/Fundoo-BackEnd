@@ -9,7 +9,7 @@ import com.bridgelabz.fundoonotesapi.responce.Response;
  * Purpose :- Creating NoteService interface
  */
 public interface NoteService {
-	Response createNote(String token, CreateNoteDto createNoteDto);
+	Response createNote(String token, CreateNoteDto createNoteDto)  throws Exception ;
 	Response updateNote(String token, UpdateNoteDto updateNoteDto, int id);
 	Response deleteNote(String token, int id);
 	Response getNotes(String token);

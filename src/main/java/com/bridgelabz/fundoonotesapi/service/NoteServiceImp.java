@@ -1,5 +1,6 @@
 package com.bridgelabz.fundoonotesapi.service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
@@ -38,15 +39,21 @@ public class NoteServiceImp implements NoteService {
 	@Autowired
 	private JwtToken jwtToken;
 	@Autowired
+	ElasticSearchServiceImp elastic;
+	@Autowired
 	private MessageData messageData;
 	private User user;
 	@Autowired
 	private ReminderRepository reminderRepository;
+	@Autowired 
+	ElasticSearchServiceImp elasticSearchServiceImp;
+	
 	String message;
 	private static final Logger LOGGER = Logger.getLogger(NoteServiceImp.class);
 
-	/** Create Note */
-	public Response createNote(String token, CreateNoteDto createNoteDto) {
+	/** Create Note 
+	 * @throws Exception */
+	public Response createNote(String token, CreateNoteDto createNoteDto) throws Exception {
 		Notes notes = mapper.map(createNoteDto, Notes.class);
 		String email = jwtToken.getToken(token);
 		user = userRepository.findByEmail(email);
@@ -57,6 +64,7 @@ public class NoteServiceImp implements NoteService {
 			notes.setDiscription(createNoteDto.getDiscription());
 			notes.setTitle(createNoteDto.getTitle());
 			notes.setUser(user);
+			elasticSearchServiceImp.createNote(notes);
 			notesRepository.save(notes);
 			LOGGER.info("Created note Succesfully in Note table");
 			return new Response(200, "Created Notes", true);

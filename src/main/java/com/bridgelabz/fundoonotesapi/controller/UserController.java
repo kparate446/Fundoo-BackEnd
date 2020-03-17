@@ -47,9 +47,9 @@ public class UserController {
 	 * @return :- Response
 	 */
 	@PostMapping("/loginusers")
-	public ResponseEntity<String> loginUser(@Valid @RequestBody LoginDTO loginDTO) {
+	public ResponseEntity<Response> loginUser(@Valid @RequestBody LoginDTO loginDTO) {
 		Response response = service.login(loginDTO);
-		return new ResponseEntity<String>(response.getMessage(),HttpStatus.OK);
+		return new ResponseEntity<Response>(response,HttpStatus.OK);
 	}
 	/**
 	 *  Purpose :- Validation Token
