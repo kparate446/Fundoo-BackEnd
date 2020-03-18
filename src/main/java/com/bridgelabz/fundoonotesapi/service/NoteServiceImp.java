@@ -2,9 +2,11 @@ package com.bridgelabz.fundoonotesapi.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.bridgelabz.fundoonotesapi.dto.CreateNoteDto;
 import com.bridgelabz.fundoonotesapi.dto.ReminderDto;
 import com.bridgelabz.fundoonotesapi.dto.UpdateNoteDto;
@@ -488,11 +490,5 @@ public class NoteServiceImp implements NoteService {
 	/** Delete Note by Elastic Search*/
 	public Response deleteNoteByElasticSearch(String token, String id) throws Exception {
 		return new Response(200, " Searching the notes Based on the Id ", elasticSearchServiceImp.deleteNote(id));// notesRepository.findById(id)
-	}
-	
-	/** Searching the notes Based on the Title Elastic Search*/
-	public Response findByTitleInElasticSearch(String token, String title) throws Exception {
-		System.out.println(title);
-		return new Response(200, " Searching the notes Based on the Id ", elasticSearchServiceImp.searchByTitle(title));// notesRepository.findById(id)
 	}
 }

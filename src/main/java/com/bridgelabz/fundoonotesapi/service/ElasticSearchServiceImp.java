@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import org.apache.lucene.search.join.ScoreMode;
+
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.get.GetRequest;
@@ -17,13 +17,12 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.stereotype.Service;
+
 import com.bridgelabz.fundoonotesapi.model.Notes;
-import com.bridgelabz.fundoonotesapi.responce.Response;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
@@ -40,6 +39,7 @@ public class ElasticSearchServiceImp {
 	}
 	private String index = "elasticsearch";
 	private String type = "createnote";
+	
 	/** Create Note*/
 	@SuppressWarnings("unchecked")
 	public void createNote(Notes notes) throws IOException {
@@ -72,22 +72,6 @@ public class ElasticSearchServiceImp {
 		GetResponse getResponse = client.get(getRequest, RequestOptions.DEFAULT);
 		Map<String, Object> resultMap = getResponse.getSource();
 		return objectMapper.convertValue(resultMap, Notes.class);
-	}
-
-	/** Search by Title*/
-	@SuppressWarnings("unchecked")
-	public List<Notes> searchByTitle(String title) throws Exception {
-		System.out.println(title);
-		SearchRequest searchRequest = new SearchRequest();
-		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-		QueryBuilder queryBuilder = QueryBuilders
-				.boolQuery().must(QueryBuilders.matchQuery("title", title));
-		searchSourceBuilder.query(QueryBuilders
-				.nestedQuery("title",queryBuilder,ScoreMode.Avg));
-		searchRequest.source(searchSourceBuilder);
-		SearchResponse response = client.search(searchRequest, RequestOptions.DEFAULT);
-		System.out.println(response);
-		return (List<Notes>) new Response(200, "searchByTitle", response);  
 	}
 	/**Show all notes*/
 	public List<Notes> showAllNotes() throws IOException {

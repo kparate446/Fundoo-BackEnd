@@ -44,7 +44,7 @@ public class NotesController {
 	 * Purpose :- Updated the note in Notes entity
 	 * @param token:- Verified the Token
 	 * @param updateNoteDto
-	 * @param id:- Which position Update note in Notes entity
+	 * @param id:- Which position Update in Notes entity
 	 * @return :-Response
 	 * @throws Exception :- Handle the Exception
 	 */
@@ -245,19 +245,6 @@ public class NotesController {
 	@GetMapping("/deleteNoteByElasticSearch/{noteId}")
 	public ResponseEntity<Response> deleteNoteByElasticSearch(@RequestHeader String token ,@PathVariable String noteId) throws Exception{
 		Response response = service.deleteNoteByElasticSearch(token,noteId);
-		return new ResponseEntity<Response>(response,HttpStatus.OK);
-	}
-
-	/** 
-	 * Purpose :- Searching the notes based on Title in Elastic Search
-	 * @param token :- Verified the Token
-	 * @param title :- Which Title access note of Data
-	 * @return :- Response
-	 * @throws Exception :-Handle the Exception
-	 */
-	@GetMapping("/findByTitleInElasticSearch/{title}")
-	public ResponseEntity<Response> findByTitleInElasticSearch(@RequestHeader String token , @PathVariable String title) throws Exception{
-		Response response = service.findByTitleInElasticSearch(token,title);
 		return new ResponseEntity<Response>(response,HttpStatus.OK);
 	}
 }
