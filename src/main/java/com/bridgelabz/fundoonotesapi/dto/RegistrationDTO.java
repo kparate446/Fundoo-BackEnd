@@ -3,7 +3,6 @@ package com.bridgelabz.fundoonotesapi.dto;
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
 /**
  * @Created By :- Krunal Parate
  * @Purpose :- Created the Registartion DTO Class
@@ -18,13 +17,21 @@ public class RegistrationDTO  {
 	@Email(message = "Email should be valid")
 	private String email;
 	@NotEmpty
-//	@Size(min = 2, max = 30)
+//		@Size(min = 2, max = 30)
 	private String password;
-//	@NotBlank(message = "Please provide a Mobile Number")
-//	/*@Size(min=0,max=10)*/
-//	@Pattern(regexp = "^[0-9]*$")
+	private String confirm;
+
+	public String getConfirm() {
+		return confirm;
+	}
+	public void setConfirm(String confirm) {
+		this.confirm = confirm;
+	}
+	//	@NotBlank(message = "Please provide a Mobile Number")
+	//	/*@Size(min=0,max=10)*/
+	//	@Pattern(regexp = "^[0-9]*$")
 	private long phoneNo;
-	
+
 	public String getFirstName() {
 		return firstName;
 	}
@@ -57,7 +64,8 @@ public class RegistrationDTO  {
 	}
 	@Override
 	public String toString() {
-		return "RegistrationDTO [firstName=" + firstName + ", lastName=" + lastName
-				+ ", email=" + email + ", password=" + password + ", phoneNo=" + phoneNo + "]";
+		return "RegistrationDTO [firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + ", password="
+				+ password + ", confirm=" + confirm + ", phoneNo=" + phoneNo + "]";
 	}
+	
 }

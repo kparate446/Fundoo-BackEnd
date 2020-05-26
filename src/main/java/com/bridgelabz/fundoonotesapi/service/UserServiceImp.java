@@ -7,6 +7,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -77,10 +80,16 @@ public class UserServiceImp implements UserService {
 		email = messageResponse.verifyMail(user.getEmail(), user.getFirstName(), token);
 		emailSenderService.sendEmail(email);
 		// Set Encoded the password
-		user.setPassword(passwordEncoder.encode(registrationDTO.getPassword()));
-		userRepository.save(user);
-		LOGGER.info("Registration Successfull in User Table");
-		return new Response(200, "Registration Successfull", token);
+		if (registrationDTO.getPassword().equals(registrationDTO.getConfirm())) {
+			user.setPassword(passwordEncoder.encode(registrationDTO.getPassword()));
+			userRepository.save(user);
+			LOGGER.info("Registration Successfull in User Table");
+			return new Response(200, "Registration Successfull", token);
+		}
+		else {
+			LOGGER.warning("Invalid Password");
+			throw new InvalidPasswordException(messageData.Invalid_Password);
+		}
 	}
 
 	/** Verification Mail */
@@ -114,17 +123,18 @@ public class UserServiceImp implements UserService {
 		if (user.isValidate()) {
 			// decoded the password and compaired
 			if (passConfig.encoder().matches(loginUser.getPassword(),user.getPassword())) {
-				if (user.isSignOut() == true) {
+//				if (user.isSignOut() == true) {
 					email = messageResponse.verifyMail(user.getEmail(), user.getFirstName(), token);
 					emailSenderService.sendEmail(email);
 					user.setSignOut(false);
 					userRepository.save(user);
 					LOGGER.info("Login Successfull");
-					return new Response(200, "login success", token);
-				}else {
-					LOGGER.info("User Already login");
-					return new Response(200, "User Already login", token);
-				}
+					
+					return new Response(200,token,user);
+//				}else {
+//					LOGGER.info("User Already login");
+//					return new Response(200, "User Already login", token);
+//				}
 			} else {
 				LOGGER.warning("Invalid Password");
 				throw new InvalidPasswordException(messageData.Invalid_Password);
@@ -135,15 +145,18 @@ public class UserServiceImp implements UserService {
 	}
 
 	/** Forgot Password */
-	public Response forgetPassword(ForgotPasswordDTO forgotPasswordDTO) {
+	public Response forgotPassword(ForgotPasswordDTO forgotPasswordDTO,HttpServletRequest requestUrl) {
 		User user = userRepository.findByEmail((forgotPasswordDTO.getEmail()));
 		String token = jwtToken.generateToken(forgotPasswordDTO.getEmail());
-		email = messageResponse.verifyMail(user.getEmail(), user.getFirstName(), token);
+		String resetUrl = "http://localhost:3000/resetpassword?" + token; // call the Url
+		email = messageResponse.verifyMail(user.getEmail(), user.getFirstName(), resetUrl);
 		emailSenderService.sendEmail(email);
 		userRepository.save(user);
-		System.out.println(token);
+		System.out.println(forgotPasswordDTO.getEmail());
+		System.out.println(resetUrl);
+//		System.out.println(token);
 		LOGGER.info("Sent the token in mail");
-		return new Response(200, "Validation", token);
+		return new Response(200, "Validation", resetUrl);
 	}
 
 	/** Reset Password */
@@ -260,7 +273,7 @@ public class UserServiceImp implements UserService {
 		user.setProfilePic(uploadProfile.get("secure_url").toString());
 		userRepository.save(user);
 		LOGGER.info("Successfully uploaded the profile picture");
-		return new Response(200, "Uploaded Profile picture Successfully", true);
+		return new Response(200, "Uploaded Profile picture Successfully", user);
 	}
 }
 

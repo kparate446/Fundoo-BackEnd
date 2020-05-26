@@ -1,4 +1,6 @@
 package com.bridgelabz.fundoonotesapi.service;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import com.bridgelabz.fundoonotesapi.dto.ForgotPasswordDTO;
@@ -15,7 +17,8 @@ public interface UserService {
 	Response login(LoginDTO loginUser);
 	Response addUser(RegistrationDTO registrationDTO);
 	Response validateUser(String token);
-	Response forgetPassword(ForgotPasswordDTO forgotPasswordDTO);
+//	Response forgetPassword(ForgotPasswordDTO forgotPasswordDTO);
+	Response forgotPassword(ForgotPasswordDTO forgotPasswordDTO,HttpServletRequest request);
 	Response deleteUsers(String token, int id);
 	Response resetPassword(String token, ResetPasswordDTO resetPasswordDTO);
 	Response signOut(String token);

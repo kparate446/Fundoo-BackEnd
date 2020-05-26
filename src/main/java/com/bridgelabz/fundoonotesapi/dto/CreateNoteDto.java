@@ -1,13 +1,21 @@
 package com.bridgelabz.fundoonotesapi.dto;
 
-import javax.validation.constraints.NotEmpty;
+//import javax.validation.constraints.NotEmpty;
 
 public class CreateNoteDto {
-	@NotEmpty
+//	@NotEmpty
 	private String title;
-	@NotEmpty
+//	@NotEmpty
 	private String discription;
+
+	private String color;
 	
+	public String getColor() {
+		return color;
+	}
+	public void setColor(String color) {
+		this.color = color;
+	}
 	public String getTitle() {
 		return title;
 	}
@@ -20,8 +28,9 @@ public class CreateNoteDto {
 	public void setDiscription(String discription) {
 		this.discription = discription;
 	}
+	
 	@Override
 	public String toString() {
-		return "CreateNote [title=" + title + ", discription=" + discription + "]";
+		return "CreateNoteDto [title=" + title + ", discription=" + discription + ", color=" + color + "]";
 	}
 }

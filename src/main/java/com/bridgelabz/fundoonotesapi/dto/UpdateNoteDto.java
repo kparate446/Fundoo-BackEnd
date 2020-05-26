@@ -7,7 +7,14 @@ public class UpdateNoteDto {
 	private String title;
 	@NotEmpty
 	private String discription;
+	private String color;
 	
+	public String getColor() {
+		return color;
+	}
+	public void setColor(String color) {
+		this.color = color;
+	}
 	public String getTitle() {
 		return title;
 	}
@@ -22,6 +29,6 @@ public class UpdateNoteDto {
 	}
 	@Override
 	public String toString() {
-		return "UpdateNoteDto [ title=" + title + ", discription=" + discription + "]";
+		return "UpdateNoteDto [title=" + title + ", discription=" + discription + ", color=" + color + "]";
 	}
 }

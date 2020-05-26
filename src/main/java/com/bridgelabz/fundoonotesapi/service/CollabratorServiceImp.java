@@ -51,6 +51,7 @@ public class CollabratorServiceImp implements CollabratorService {
 	public Response createCollabrator(String token, int id, CollabratorDto collabratorDto) {
 		Collabrator collabrator = mapper.map(collabratorDto, Collabrator.class);
 		Notes notes = notesRepository.findById(id).orElseThrow(() -> new InvalidNoteException(messageData.Invalid_Note));
+		
 		String email = jwtToken.getToken(token);
 		User user1 = userRepository.findByEmail(email);
 		if (userRepository.findByEmail(email) == null) {
@@ -68,6 +69,12 @@ public class CollabratorServiceImp implements CollabratorService {
 				throw new ReceiverMailAlreadyPresentException(messageData.ReceiverMail_Already_Present);
 			}
 		}
+		//check if it belong to user note
+		if(notes.getUser().getId() == user.getId()) {
+			for(User user : userRepository.findAll()) {
+				if(user.getEmail().equals(collabratorDto.getMailReceiver())) {
+					
+		
 		// Check the Collabrator are Already Present. 
 		for (Collabrator collabrator1 : notes.getCollabrators()) {
 			if (collabrator1.getMailReceiver().equals(collabratorDto.getMailReceiver())){ /// ***
@@ -86,6 +93,10 @@ public class CollabratorServiceImp implements CollabratorService {
 			LOGGER.warning("Note not present");
 			throw new InvalidNoteException(messageData.Invalid_Note);
 		}
+				}
+			}
+		}
+		throw new InvalidNoteException(messageData.Invalid_Note);
 	}
 
 	/** Collabrator Deleted */

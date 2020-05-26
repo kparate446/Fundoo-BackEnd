@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -23,20 +24,27 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @Table(name = "notesDetails")
 // Egnoring the All User Data
-@JsonIgnoreProperties({"user","listOfLabels"}) 
+@JsonIgnoreProperties({"user"}) 
 public class Notes {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
-	@NotEmpty
+	
 	private String title;
-	@NotEmpty
 	private String discription;
 	private Date date = new Date();
 	
 	private boolean isTrash = false;
 	private boolean isAchieve = false;
 	private boolean isPin = false;
+	
+	private String color;
+	public String getColor() {
+		return color;
+	}
+	public void setColor(String color) {
+		this.color = color;
+	}
 	// Mapping Collabrators & notes
 	@OneToMany(mappedBy = "notes")
 	private List<Collabrator>collabrators = new ArrayList<Collabrator>();
@@ -47,14 +55,14 @@ public class Notes {
 		this.collabrators = collabrators;
 	}
 	// Mapped labels & Notes
-	@ManyToMany(mappedBy = "listOfNotes")
-	private List<Labels> listOfLabels = new ArrayList<Labels>();
+	@ManyToMany
+	private List<Labels> labelList  = new ArrayList<Labels>();
 	
-	public List<Labels> getListOfLabels() {
-		return listOfLabels;
+	public List<Labels> getLabelList() {
+		return labelList;
 	}
-	public void setListOfLabels(List<Labels> listOfLabels) {
-		this.listOfLabels = listOfLabels;
+	public void setLabelList(List<Labels> labelList) {
+		this.labelList = labelList;
 	}
 	//
 	@OneToOne(mappedBy = "notes")
@@ -94,7 +102,7 @@ public class Notes {
 		return isPin;
 	}
 	public void setPin(boolean isPin) {
-		this.isPin = isPin;
+	this.isPin = isPin;
 	}
 	public void setDate(Date date) {
 		this.date = date;
@@ -124,8 +132,8 @@ public class Notes {
 	@Override
 	public String toString() {
 		return "Notes [id=" + id + ", title=" + title + ", discription=" + discription + ", date=" + date + ", isTrash="
-				+ isTrash + ", isAchieve=" + isAchieve + ", isPin=" + isPin + ", listOfLabels=" + listOfLabels
-				+ ", reminder=" + reminder + ", collabrators=" + collabrators + ", user=" + user + "]";
+				+ isTrash + ", isAchieve=" + isAchieve + ", isPin=" + isPin + ", color=" + color + ", collabrators="
+				+ collabrators + ", labelList=" + labelList + ", reminder=" + reminder + ", user=" + user + "]";
 	}
 		
 }

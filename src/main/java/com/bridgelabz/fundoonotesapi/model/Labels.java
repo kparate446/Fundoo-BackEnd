@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  */
 @Entity
 @Table(name = "labelDetails")
-@JsonIgnoreProperties({"user"}) 
+@JsonIgnoreProperties({"user","noteList"}) 
 
 public class Labels {
 	@Id
@@ -36,14 +36,15 @@ public class Labels {
 	private User user;
 	// Mapping with Notes to Labels
 	@ManyToMany
-	@JoinTable(name = "notesLabels",joinColumns = @JoinColumn(referencedColumnName = "id") )
-	private List<Notes> listOfNotes = new ArrayList<>();
+	@JoinTable(name = "NoteLabelList",joinColumns = @JoinColumn(referencedColumnName = "id") )
+	private List<Notes> noteList = new ArrayList<>();
 
-	public List<Notes> getListOfNotes() {
-		return listOfNotes;
+	
+	public List<Notes> getNoteList() {
+		return noteList;
 	}
-	public void setListOfNotes(List<Notes> listOfNotes) {
-		this.listOfNotes = listOfNotes;
+	public void setNoteList(List<Notes> noteList) {
+		this.noteList = noteList;
 	}
 	
 	public User getUser() {

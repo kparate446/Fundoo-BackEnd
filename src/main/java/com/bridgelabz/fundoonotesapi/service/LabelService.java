@@ -12,4 +12,5 @@ public interface LabelService {
 	Response deleteNote(String token, int id);
 	Response getLabels(String token);
 	Response AddLablesInNotes(String token, int noteId,int labelId);
+	Response DeleteLablesInNotes(String token, int noteId,int labelId);
 }

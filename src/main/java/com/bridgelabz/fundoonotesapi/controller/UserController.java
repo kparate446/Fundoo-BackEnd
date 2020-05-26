@@ -1,9 +1,11 @@
 package com.bridgelabz.fundoonotesapi.controller;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +27,8 @@ import com.bridgelabz.fundoonotesapi.service.UserService;
  * @author :- Krunal Parate
  * Purpose :- API Created
  */
+@CrossOrigin(origins ="*", maxAge = 3600)
+//@CrossOrigin(origins = "http://localhost:3000")
 @RestController // return the data converted JSON Automatically
 @RequestMapping("/userapi")
 public class UserController {
@@ -67,8 +71,8 @@ public class UserController {
 	 * @return :- Response
 	 */
 	@PostMapping("/forgotpassword")
-	public ResponseEntity<String> forgotPassword(@Valid @RequestBody ForgotPasswordDTO forgotPasswordDTO){
-		Response response = service.forgetPassword(forgotPasswordDTO);
+	public ResponseEntity<String> forgotPassword(@Valid @RequestBody ForgotPasswordDTO forgotPasswordDTO,HttpServletRequest request){
+		Response response = service.forgotPassword(forgotPasswordDTO, request);
 		return new ResponseEntity<String>(response.getMessage(),HttpStatus.OK);
 	}
 	/**

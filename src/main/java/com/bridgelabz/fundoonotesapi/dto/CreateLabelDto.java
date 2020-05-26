@@ -7,7 +7,7 @@ import javax.validation.constraints.NotEmpty;
  *
  */
 public class CreateLabelDto {
-	@NotEmpty
+//	@NotEmpty
 	private String labelName;
 	
 	public String getLabelName() {

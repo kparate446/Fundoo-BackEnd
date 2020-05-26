@@ -135,22 +135,57 @@ public class LabelServiceImp implements LabelService{
 		}
 		for(Labels labels : user.getLabels()) {
 			if(labels.getId() == labelId) {
-				List<Labels> listOfLabels = note.getListOfLabels();
-				List<Notes> listOfNotes = labels.getListOfNotes();
+				List<Labels> listOfLabels = note.getLabelList();
+				List<Notes> listOfNotes = labels.getNoteList();
 				for(Labels labels1 : listOfLabels) {
 					if(labels1.getId() == labelId) {
-						LOGGER.warning("Label Alredy Present");
-						throw new LabelAlreadyPresentException(messageData.LabelAlready_Present);
+						listOfLabels.remove(labels1);
+						note.setLabelList(listOfLabels);
+						notesRepository.save(note);
+						LOGGER.info("Successfully Deleted Labels in Notes");
+						return new Response(200, "Successfully Deleted Labels in Notes", true);
 					}
 				}
 				listOfLabels.add(labels);
 				listOfNotes.add(note);
-				note.setListOfLabels(listOfLabels);
-				labels.setListOfNotes(listOfNotes);
+				note.setLabelList(listOfLabels);
+				labels.setNoteList(listOfNotes);
 				notesRepository.save(note);
 				labelRepository.save(labels);
 				LOGGER.info("Successfully Added Labels in Notes");
 				return new Response(200, "Successfully added Labels in Notes", true);
+			}
+		}
+		LOGGER.warning("Label Not Present");
+		throw new InvalidLabelException(messageData.Invalid_Label);
+	}
+
+	/** Delete Labels In Notes */
+	public Response DeleteLablesInNotes(String token, int noteId,int labelId) {
+		String email = jwtToken.getToken(token);
+		user = userRepository.findByEmail(email);
+		if (user == null) {
+			LOGGER.warning("Invalid user");
+			throw new InvalidUserException(messageData.Invalid_User);
+		} 
+		Notes note = notesRepository.findById(noteId).orElseThrow(() -> new InvalidNoteException(messageData.Invalid_Note));
+		if(note.getUser().getId()!= user.getId()) {
+			LOGGER.warning("Note not present");
+			throw new InvalidNoteException(messageData.Invalid_Note);
+		}
+		for(Labels labels : user.getLabels()) {
+			if(labels.getId() == labelId) {
+				List<Labels> listOfLabels = note.getLabelList();
+				for(Labels labels1 : listOfLabels) {
+					if(labels1.getId() == labelId) {
+						listOfLabels.remove(labels1);
+						note.setLabelList(listOfLabels);
+						notesRepository.save(note);
+						LOGGER.info("Successfully Deleted Labels in Notes");
+						return new Response(200, "Successfully Deleted Labels in Notes", true);
+					}
+				}
+				
 			}
 		}
 		LOGGER.warning("Label Not Present");

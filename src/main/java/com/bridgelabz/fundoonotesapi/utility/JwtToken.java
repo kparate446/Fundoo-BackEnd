@@ -19,6 +19,7 @@ public class JwtToken {
 	public String generateToken(String email) {
 		return Jwts.builder().setId(email).setIssuedAt(new Date(System.currentTimeMillis()))
 				.signWith(alorithm, secretKey).compact();
+		
 	}
 	// To decode Token
 	public String getToken(String token) {

@@ -1,5 +1,6 @@
 package com.bridgelabz.fundoonotesapi.service;
 
+import com.bridgelabz.fundoonotesapi.dto.ColorDTO;
 import com.bridgelabz.fundoonotesapi.dto.CreateNoteDto;
 import com.bridgelabz.fundoonotesapi.dto.ReminderDto;
 import com.bridgelabz.fundoonotesapi.dto.UpdateNoteDto;
@@ -26,6 +27,10 @@ public interface NoteService {
 	Response getReminder(String token);
 	Response findByTitle(String token, String Title);
 	Response findByDescription(String token, String discription);
+	Response setColor(String token,ColorDTO colorDTO,int id);
+	Response showArchiveNotes(String token);
+	Response showTrashNotes(String token);
+	Response showPinNotes(String token);
 	/*****************Elastic Search*****************/
 	Response findByIdInElasticSearch(String token, String id) throws Exception;
 	Response deleteNoteByElasticSearch(String token, String id) throws Exception;

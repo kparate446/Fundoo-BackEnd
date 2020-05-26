@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -20,8 +21,8 @@ public class Reminder {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
-//	private Date date = new Date();
-	@DateTimeFormat(pattern = "yyyy-MM-dd hh:mm")
+//	private Date date = new Date();5/14/2020, 1:52:00 PM
+//	@DateTimeFormat(pattern = "MM/dd/yyyy hh:mm:ss aa")
 	private Date dateAndTime;
 	
 	@OneToOne

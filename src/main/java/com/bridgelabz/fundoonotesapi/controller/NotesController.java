@@ -1,10 +1,10 @@
 package com.bridgelabz.fundoonotesapi.controller;
 
 import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bridgelabz.fundoonotesapi.dto.ColorDTO;
 import com.bridgelabz.fundoonotesapi.dto.CreateNoteDto;
 import com.bridgelabz.fundoonotesapi.dto.ReminderDto;
 import com.bridgelabz.fundoonotesapi.dto.UpdateNoteDto;
@@ -24,6 +25,8 @@ import com.bridgelabz.fundoonotesapi.service.NoteService;
  * @author :- Krunal Parate
  * Purpose :- Creating the API
  */
+//@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins ="*", maxAge = 3600)
 @RestController 
 @RequestMapping("/notesapi")
 public class NotesController {
@@ -41,6 +44,19 @@ public class NotesController {
 		return new ResponseEntity<String>(response.getMessage(),HttpStatus.OK);
 	}
 	/**
+	 * Purpose :- Add Color
+	 * @param token :- Verified the token
+	 * @param colorDTO 
+	 * @param noteId
+	 * @return :- Response
+	 * @throws Exception 
+	 */
+	@PostMapping("/changeColor/{noteId}")
+	public ResponseEntity<String> changeColor (@RequestHeader String token,@Valid @RequestBody ColorDTO colorDTO,@PathVariable  int noteId) throws Exception{
+		Response response = service.setColor(token, colorDTO, noteId);
+		return new ResponseEntity<String>(response.getMessage(),HttpStatus.OK);
+	}
+	/**
 	 * Purpose :- Updated the note in Notes entity
 	 * @param token:- Verified the Token
 	 * @param updateNoteDto
@@ -48,7 +64,7 @@ public class NotesController {
 	 * @return :-Response
 	 * @throws Exception :- Handle the Exception
 	 */
-	@PutMapping("/updateNote/{noteId}")
+	@PostMapping("/updateNote/{noteId}")
 	public ResponseEntity<String> UpdateNote(@RequestHeader String token,@Valid @RequestBody UpdateNoteDto updateNoteDto,@PathVariable  int noteId) throws Exception{
 		Response response = service.updateNote(token,updateNoteDto,noteId);
 		return new ResponseEntity<String>(response.getMessage(),HttpStatus.OK);
@@ -86,7 +102,6 @@ public class NotesController {
 		Response response = service.sortByTitle(token,order);
 		return new ResponseEntity<Response>(response,HttpStatus.OK);
 	}
-
 	/**
 	 * Purpose :-Sorted by Discription 
 	 * @param token :- Verified the Token
@@ -121,6 +136,16 @@ public class NotesController {
 		return new ResponseEntity<Response>(response,HttpStatus.OK);
 	}
 	/**
+	 * Purpose :-  Show Pin Notes
+	 * @param token :- Verified the token
+	 * @return :- Response
+	 */
+	@GetMapping("/showPinNotes")
+	public ResponseEntity<Response> showPinNotes(@RequestHeader String token ){
+		Response response = service.showPinNotes(token);
+		return new ResponseEntity<Response>(response,HttpStatus.OK);
+	}
+	/**
 	 * Purpose :- Trashed & Restore Notes
 	 * @param token :-Verified the Token
 	 * @param id :- Which Position Deleted/Restore
@@ -132,6 +157,16 @@ public class NotesController {
 		return new ResponseEntity<Response>(response,HttpStatus.OK);
 	}
 	/**
+	 * Purpose :- Show Trash Notes
+	 * @param token :- Verified the token
+	 * @return :- Response
+	 */
+	@GetMapping("/showTrashNotes")
+	public ResponseEntity<Response> showtrashNotes(@RequestHeader String token ){
+		Response response = service.showTrashNotes(token);
+		return new ResponseEntity<Response>(response,HttpStatus.OK);
+	}
+	/**
 	 * Purpose :- Archive & Unarchieve Notes
 	 * @param token :- Verified the Token
 	 * @param id :- Which Position Archive/Unarchive in Notes entity
@@ -140,6 +175,16 @@ public class NotesController {
 	@PostMapping("/archiveNotes/{noteId}")
 	public ResponseEntity<Response> archiveNotes(@RequestHeader String token ,@PathVariable int noteId){
 		Response response = service.archiveNotes(token, noteId);
+		return new ResponseEntity<Response>(response,HttpStatus.OK);
+	}
+	/**
+	 * Purpose:- Show All Archive Notes
+	 * @param token :- verified the token
+	 * @return :- Response
+	 */
+	@GetMapping("/showArchiveNotes")
+	public ResponseEntity<Response> showarchiveNotes(@RequestHeader String token ){
+		Response response = service.showArchiveNotes(token);
 		return new ResponseEntity<Response>(response,HttpStatus.OK);
 	}
 	/**
@@ -234,7 +279,6 @@ public class NotesController {
 		Response response = service.findByIdInElasticSearch(token,noteId);
 		return new ResponseEntity<Response>(response,HttpStatus.OK);
 	}
-
 	/**
 	 * Purpose :- Deleted note by Elastic Search
 	 * @param token :- Verified the Token
