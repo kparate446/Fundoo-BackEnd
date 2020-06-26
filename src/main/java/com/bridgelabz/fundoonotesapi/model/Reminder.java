@@ -22,7 +22,7 @@ public class Reminder {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 //	private Date date = new Date();5/14/2020, 1:52:00 PM
-//	@DateTimeFormat(pattern = "MM/dd/yyyy hh:mm:ss aa")
+	@DateTimeFormat(pattern = "MM/dd/yyyy hh:mm:ss aa")
 	private Date dateAndTime;
 	
 	@OneToOne

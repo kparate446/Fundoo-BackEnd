@@ -23,9 +23,10 @@ import com.bridgelabz.fundoonotesapi.repository.UserRepository;
 import com.bridgelabz.fundoonotesapi.responce.Response;
 import com.bridgelabz.fundoonotesapi.utility.JwtToken;
 import com.sun.istack.logging.Logger;
+
 /**
- * @author :- Krunal Parate
- * Purpose :-  Implementing the Create,Update,Delete Collabrator
+ * @author :- Krunal Parate Purpose :- Implementing the Create,Update,Delete
+ *         Collabrator
  */
 @Service
 public class CollabratorServiceImp implements CollabratorService {
@@ -50,8 +51,9 @@ public class CollabratorServiceImp implements CollabratorService {
 	/** Collabrator Created */
 	public Response createCollabrator(String token, int id, CollabratorDto collabratorDto) {
 		Collabrator collabrator = mapper.map(collabratorDto, Collabrator.class);
-		Notes notes = notesRepository.findById(id).orElseThrow(() -> new InvalidNoteException(messageData.Invalid_Note));
-		
+		Notes notes = notesRepository.findById(id)
+				.orElseThrow(() -> new InvalidNoteException(messageData.Invalid_Note));
+
 		String email = jwtToken.getToken(token);
 		User user1 = userRepository.findByEmail(email);
 		if (userRepository.findByEmail(email) == null) {
@@ -62,37 +64,36 @@ public class CollabratorServiceImp implements CollabratorService {
 			LOGGER.warning("Note not present");
 			throw new InvalidNoteException(messageData.Invalid_Note);
 		}
-		// Check the User Sender Mail and Receiver Mail are same. 
+		// Check the User Sender Mail and Receiver Mail are same.
 		for (Collabrator collabrator1 : notes.getCollabrators()) {
-			if (collabrator1.getMailSender().equals(collabratorDto.getMailReceiver())){ /// ***
+			if (collabrator1.getMailSender().equals(collabratorDto.getMailReceiver())) { /// ***
 				LOGGER.warning("User are already present");
 				throw new ReceiverMailAlreadyPresentException(messageData.ReceiverMail_Already_Present);
 			}
 		}
-		//check if it belong to user note
-		if(notes.getUser().getId() == user.getId()) {
-			for(User user : userRepository.findAll()) {
-				if(user.getEmail().equals(collabratorDto.getMailReceiver())) {
-					
-		
-		// Check the Collabrator are Already Present. 
-		for (Collabrator collabrator1 : notes.getCollabrators()) {
-			if (collabrator1.getMailReceiver().equals(collabratorDto.getMailReceiver())){ /// ***
-				LOGGER.warning("User are already present");
-				throw new ReceiverMailAlreadyPresentException(messageData.ReceiverMail_Already_Present);
-			}
-		}
-		if (notes.getUser().getId() == userRepository.findByEmail(email).getId()) {
-			collabrator.setMailReceiver(collabratorDto.getMailReceiver());
-			collabrator.setMailSender(user1.getEmail());
-			collabrator.setNotes(notes);
-			collabratorRepository.save(collabrator);
-			LOGGER.info("Collabrator added Succesfully in Collabrator table");
-			return new Response(200, "Collabrator Created Successfully", true);
-		} else {
-			LOGGER.warning("Note not present");
-			throw new InvalidNoteException(messageData.Invalid_Note);
-		}
+		// check if it belong to user note
+		if (notes.getUser().getId() == user.getId()) {
+			for (User user : userRepository.findAll()) {
+				if (user.getEmail().equals(collabratorDto.getMailReceiver())) {
+
+					// Check the Collabrator are Already Present.
+					for (Collabrator collabrator1 : notes.getCollabrators()) {
+						if (collabrator1.getMailReceiver().equals(collabratorDto.getMailReceiver())) { /// ***
+							LOGGER.warning("User are already present");
+							throw new ReceiverMailAlreadyPresentException(messageData.ReceiverMail_Already_Present);
+						}
+					}
+					if (notes.getUser().getId() == userRepository.findByEmail(email).getId()) {
+						collabrator.setMailReceiver(collabratorDto.getMailReceiver());
+						collabrator.setMailSender(user1.getEmail());
+						collabrator.setNotes(notes);
+						collabratorRepository.save(collabrator);
+						LOGGER.info("Collabrator added Succesfully in Collabrator table");
+						return new Response(200, "Collabrator Created Successfully", true);
+					} else {
+						LOGGER.warning("Note not present");
+						throw new InvalidNoteException(messageData.Invalid_Note);
+					}
 				}
 			}
 		}
@@ -102,7 +103,8 @@ public class CollabratorServiceImp implements CollabratorService {
 	/** Collabrator Deleted */
 	public Response deletedCollabrator(String token, int id) {
 		String email = jwtToken.getToken(token);
-		Collabrator collabrator = collabratorRepository.findById(id).orElseThrow(() -> new InvalidCollabratorException(messageData.Invalid_Collabrator));
+		Collabrator collabrator = collabratorRepository.findById(id)
+				.orElseThrow(() -> new InvalidCollabratorException(messageData.Invalid_Collabrator));
 		user = userRepository.findByEmail(email);
 		if (user == null) {
 			LOGGER.warning("Invalid user");
@@ -126,18 +128,20 @@ public class CollabratorServiceImp implements CollabratorService {
 			LOGGER.warning("Invalid user");
 			throw new InvalidUserException(messageData.Invalid_User);
 		}
-		if (collabratorRepository.findById(id)==null) {
+		if (collabratorRepository.findById(id) == null) {
 			LOGGER.warning("Invalid Collabrator");
 			throw new InvalidCollabratorException(messageData.Invalid_Collabrator);
-		}else {
-			Collabrator collabrator = collabratorRepository.findById(id).orElseThrow(() -> new InvalidCollabratorException(messageData.Invalid_Collabrator));
+		} else {
+			Collabrator collabrator = collabratorRepository.findById(id)
+					.orElseThrow(() -> new InvalidCollabratorException(messageData.Invalid_Collabrator));
 			collabrator.setMailReceiver(collabratorDto.getMailReceiver());
 			collabratorRepository.save(collabrator);
 			LOGGER.info("Successfully collabrator updated");
 			return new Response(200, "Collabrator Updated Successfully", true);
 		}
 	}
-	/** Show Collabrator*/
+
+	/** Show Collabrator */
 	public Response getCollabrator(String token) {
 		String email = jwtToken.getToken(token);
 		user = userRepository.findByEmail(email);
@@ -145,10 +149,11 @@ public class CollabratorServiceImp implements CollabratorService {
 			LOGGER.warning("Invalid user");
 			throw new InvalidUserException(messageData.Invalid_User);
 		}
-		if(user.getNotes()!=null) {
-			List<Collabrator>collabrator = collabratorRepository.findAll().stream().filter(e ->e.getNotes().getUser().getId()==user.getId()).collect(Collectors.toList());
+		if (user.getNotes() != null) {
+			List<Collabrator> collabrator = collabratorRepository.findAll().stream()
+					.filter(e -> e.getNotes().getUser().getId() == user.getId()).collect(Collectors.toList());
 			LOGGER.info("Successfully showing the Collabrator table data");
-			return	new Response(200, "Show the All Collabrator Successfully ", collabrator);
+			return new Response(200, "Show the All Collabrator Successfully ", collabrator);
 		}
 		LOGGER.warning("Invalid Collabrator");
 		throw new InvalidCollabratorException(messageData.Invalid_Collabrator);

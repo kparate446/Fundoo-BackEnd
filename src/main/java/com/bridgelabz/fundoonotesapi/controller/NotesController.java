@@ -266,6 +266,18 @@ public class NotesController {
 		Response response = service.findByDescription(token, description);
 		return new ResponseEntity<Response>(response,HttpStatus.OK);
 	}
+	/**
+	 * Purpose :- Created PDF Document
+	 * @param token :- Verified the Token
+	 * @return :- Response
+	 * @throws Exception :- Handle the Exception
+	 */
+	@GetMapping("/createPdf")
+	public ResponseEntity<Response> createPdf(@RequestHeader String token) throws Exception 
+	{
+		Response response = service.createPdf(token);
+		return new ResponseEntity<Response>(response,HttpStatus.OK);
+	}
 	/**************Elastic Search ***************************/
 	/**
 	 * Purpose :- Searching the notes based on the Id in Elastic Search

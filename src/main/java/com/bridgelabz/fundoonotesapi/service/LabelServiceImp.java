@@ -192,4 +192,3 @@ public class LabelServiceImp implements LabelService{
 		throw new InvalidLabelException(messageData.Invalid_Label);
 	}
 }
-

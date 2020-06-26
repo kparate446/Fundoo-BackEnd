@@ -17,7 +17,6 @@ public interface UserService {
 	Response login(LoginDTO loginUser);
 	Response addUser(RegistrationDTO registrationDTO);
 	Response validateUser(String token);
-//	Response forgetPassword(ForgotPasswordDTO forgotPasswordDTO);
 	Response forgotPassword(ForgotPasswordDTO forgotPasswordDTO,HttpServletRequest request);
 	Response deleteUsers(String token, int id);
 	Response resetPassword(String token, ResetPasswordDTO resetPasswordDTO);

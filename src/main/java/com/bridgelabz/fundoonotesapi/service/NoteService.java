@@ -31,6 +31,7 @@ public interface NoteService {
 	Response showArchiveNotes(String token);
 	Response showTrashNotes(String token);
 	Response showPinNotes(String token);
+	Response createPdf(String token) throws Exception;
 	/*****************Elastic Search*****************/
 	Response findByIdInElasticSearch(String token, String id) throws Exception;
 	Response deleteNoteByElasticSearch(String token, String id) throws Exception;

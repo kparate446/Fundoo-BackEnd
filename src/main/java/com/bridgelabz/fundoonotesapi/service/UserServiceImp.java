@@ -36,6 +36,7 @@ import com.bridgelabz.fundoonotesapi.utility.JwtToken;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.sun.istack.logging.Logger;
+
 /**
  * @Created By :- krunal Parate
  * @Purpose :- Implement the API
@@ -46,9 +47,6 @@ public class UserServiceImp implements UserService {
 	private ModelMapper mapper;
 	@Autowired
 	private UserRepository userRepository;
-	/*
-	 * // @Autowired private JavaMailSender javaMailSender;
-	 */
 	@Autowired
 	private EmailSenderService emailSenderService;
 	@Autowired
@@ -63,13 +61,13 @@ public class UserServiceImp implements UserService {
 	PasswordEncoder passwordEncoder;
 	@Autowired
 	PasswordConfiguration passConfig;
-	 private static final Logger LOGGER = Logger.getLogger(UserServiceImp.class);
+	private static final Logger LOGGER = Logger.getLogger(UserServiceImp.class);
 
 	/** Registration For User */
 	public Response addUser(RegistrationDTO registrationDTO) {
 		User checkEmail = userRepository.findByEmail(registrationDTO.getEmail());
 		// User is Already Present or Not
-		if(checkEmail !=null) {
+		if (checkEmail != null) {
 			LOGGER.warning("User are already present");
 			throw new UserAlreadyPresentException(messageData.userAlready_Present);
 		}
@@ -85,8 +83,7 @@ public class UserServiceImp implements UserService {
 			userRepository.save(user);
 			LOGGER.info("Registration Successfull in User Table");
 			return new Response(200, "Registration Successfull", token);
-		}
-		else {
+		} else {
 			LOGGER.warning("Invalid Password");
 			throw new InvalidPasswordException(messageData.Invalid_Password);
 		}
@@ -122,30 +119,23 @@ public class UserServiceImp implements UserService {
 		}
 		if (user.isValidate()) {
 			// decoded the password and compaired
-			if (passConfig.encoder().matches(loginUser.getPassword(),user.getPassword())) {
-//				if (user.isSignOut() == true) {
-					email = messageResponse.verifyMail(user.getEmail(), user.getFirstName(), token);
-					emailSenderService.sendEmail(email);
-					user.setSignOut(false);
-					userRepository.save(user);
-					LOGGER.info("Login Successfull");
-					
-					return new Response(200,token,user);
-//				}else {
-//					LOGGER.info("User Already login");
-//					return new Response(200, "User Already login", token);
-//				}
+			if (passConfig.encoder().matches(loginUser.getPassword(), user.getPassword())) {
+				user.setSignOut(false);
+				userRepository.save(user);
+				LOGGER.info("Login Successfull");
+
+				return new Response(200, token, user);
 			} else {
 				LOGGER.warning("Invalid Password");
 				throw new InvalidPasswordException(messageData.Invalid_Password);
 			}
 		} else
 			LOGGER.warning("Invalid user");
-			throw new InvalidUserException(messageData.Invalid_User);
+		throw new InvalidUserException(messageData.Invalid_User);
 	}
 
 	/** Forgot Password */
-	public Response forgotPassword(ForgotPasswordDTO forgotPasswordDTO,HttpServletRequest requestUrl) {
+	public Response forgotPassword(ForgotPasswordDTO forgotPasswordDTO, HttpServletRequest requestUrl) {
 		User user = userRepository.findByEmail((forgotPasswordDTO.getEmail()));
 		String token = jwtToken.generateToken(forgotPasswordDTO.getEmail());
 		String resetUrl = "http://localhost:3000/resetpassword?" + token; // call the Url
@@ -154,7 +144,6 @@ public class UserServiceImp implements UserService {
 		userRepository.save(user);
 		System.out.println(forgotPasswordDTO.getEmail());
 		System.out.println(resetUrl);
-//		System.out.println(token);
 		LOGGER.info("Sent the token in mail");
 		return new Response(200, "Validation", resetUrl);
 	}
@@ -189,7 +178,7 @@ public class UserServiceImp implements UserService {
 			return new Response(200, "Show All Users ", users);
 		}
 	}
-	
+
 	/** Deleted Users */
 	public Response deleteUsers(String token, int id) {
 		User user;
@@ -207,8 +196,8 @@ public class UserServiceImp implements UserService {
 			throw new InvalidUserException(messageData.Invalid_User);
 		}
 	}
-	
-	/** User Signout*/
+
+	/** User Signout */
 	public Response signOut(String token) {
 		String email = jwtToken.getToken(token);
 		User user = userRepository.findByEmail(email);
@@ -224,8 +213,7 @@ public class UserServiceImp implements UserService {
 				userRepository.save(user);
 				LOGGER.info("Successfully User logout");
 				return new Response(200, "logout success", "Logout");
-			}
-			else {
+			} else {
 				LOGGER.warning("User Already logout");
 				return new Response(400, "User Already logout", false);
 			}
@@ -233,8 +221,8 @@ public class UserServiceImp implements UserService {
 		LOGGER.warning("Invalid user");
 		throw new InvalidUserException(messageData.Invalid_User);
 	}
-	
-	/** Uploaded the Profile Pic*/
+
+	/** Uploaded the Profile Pic */
 	public Response uploadProfilePic(String token, MultipartFile file) {
 		String email = jwtToken.getToken(token);
 		// check whether user is present or not
@@ -258,7 +246,7 @@ public class UserServiceImp implements UserService {
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-		}				
+		}
 		// Connection of Closet cloudinary properties
 		Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap("cloud_name", "dmlqjysiv", "api_key",
 				"242443158528625", "api_secret", "q9p9sxtwVI-kSM5CVt-Yrc4_B0c"));
@@ -276,4 +264,3 @@ public class UserServiceImp implements UserService {
 		return new Response(200, "Uploaded Profile picture Successfully", user);
 	}
 }
-

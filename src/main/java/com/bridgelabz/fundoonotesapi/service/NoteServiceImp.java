@@ -1,7 +1,16 @@
 package com.bridgelabz.fundoonotesapi.service;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,8 +36,7 @@ import com.bridgelabz.fundoonotesapi.utility.JwtToken;
 import com.sun.istack.logging.Logger;
 
 /**
- * @author :- Krunal Parate
- * Purpose :- Implementing the API
+ * @author :- Krunal Parate Purpose :- Implementing the API
  */
 
 @Service
@@ -79,7 +87,7 @@ public class NoteServiceImp implements NoteService {
 		}
 	}
 
-	/** Add Color*/
+	/** Add Color */
 	public Response setColor(String token, ColorDTO colorDTO, int id) {
 		Notes note = notesRepository.findById(id).orElseThrow(() -> new InvalidNoteException(messageData.Invalid_Note));
 		String email = jwtToken.getToken(token);
@@ -150,19 +158,21 @@ public class NoteServiceImp implements NoteService {
 	/** Show All Notes */
 	public Response getNotes(String token) {
 		String email = jwtToken.getToken(token);
-		List<Notes>Notes = notesRepository.findAll();
+		List<Notes> Notes = notesRepository.findAll();
 		user = userRepository.findByEmail(email);
 		if (user == null) {
 			LOGGER.warning("Invalid user");
 			throw new InvalidUserException(messageData.Invalid_User);
 		}
-		
+
 		if (user.getNotes() != null) {
 			// The stream getting the all notes from database & filter is used in request
 			// and response of the data
-			List<Notes> note = Notes.stream().filter(note1 -> note1.isAchieve() == false && note1.isTrash()==false && note1.isPin()==false).collect(Collectors.toList());
-			
-			List<Notes>getNotes = note.stream().filter(e -> e.getUser().getId() == user.getId())
+			List<Notes> note = Notes.stream()
+					.filter(note1 -> note1.isAchieve() == false && note1.isTrash() == false && note1.isPin() == false)
+					.collect(Collectors.toList());
+
+			List<Notes> getNotes = note.stream().filter(e -> e.getUser().getId() == user.getId())
 					.collect(Collectors.toList());
 			LOGGER.info("Successfully showing the Notes table data");
 			return new Response(200, "Show the All Notes Successfully ", getNotes);
@@ -298,28 +308,27 @@ public class NoteServiceImp implements NoteService {
 		LOGGER.warning("Note not present");
 		throw new InvalidNoteException(messageData.Invalid_Note);
 	}
-	
-	/** Show Pin Notes*/
+
+	/** Show Pin Notes */
 	public Response showPinNotes(String token) {
 		String email = jwtToken.getToken(token);
 		user = userRepository.findByEmail(email);
 		if (email.isEmpty()) {
 			return new Response(400, "Invalid token", false);
-		}	
+		}
 		List<Notes> allNotes = notesRepository.findAll();
 		if (user == null) {
 			LOGGER.warning("Invalid user");
 			throw new InvalidNoteException(messageData.Invalid_User);
 		}
-		List<Notes> note = allNotes.stream().filter(note1
-				->note1.isPin()).collect(Collectors.toList());
-		
-		List<Notes> allNotesOfUser = note.stream().filter( userNotes ->
-		userNotes.getUser().getEmail().equals(user.getEmail())).collect(Collectors.toList());
-		LOGGER.info("Successfully showing the Pin Notes");
-		return new Response(200, "All PinNotes",allNotesOfUser);
-	}
+		List<Notes> note = allNotes.stream().filter(note1 -> note1.isPin()).collect(Collectors.toList());
 
+		List<Notes> allNotesOfUser = note.stream()
+				.filter(userNotes -> userNotes.getUser().getEmail().equals(user.getEmail()))
+				.collect(Collectors.toList());
+		LOGGER.info("Successfully showing the Pin Notes");
+		return new Response(200, "All PinNotes", allNotesOfUser);
+	}
 
 	/** Trashed & Restore Notes */
 	public Response trashedNotes(String token, int id) {
@@ -349,28 +358,27 @@ public class NoteServiceImp implements NoteService {
 		LOGGER.warning("Note not present");
 		throw new InvalidNoteException(messageData.Invalid_Note);
 	}
-	
-	/** Show Trash Notes*/
+
+	/** Show Trash Notes */
 	public Response showTrashNotes(String token) {
 		String email = jwtToken.getToken(token);
 		user = userRepository.findByEmail(email);
 		if (email.isEmpty()) {
 			return new Response(400, "Invalid token", false);
-		}	
+		}
 		List<Notes> allNotes = notesRepository.findAll();
 		if (user == null) {
 			LOGGER.warning("Invalid user");
 			throw new InvalidNoteException(messageData.Invalid_User);
 		}
-		List<Notes> note = allNotes.stream().filter(note1
-				->note1.isTrash()).collect(Collectors.toList());
-		
-		List<Notes> allNotesOfUser = note.stream().filter( userNotes ->
-		userNotes.getUser().getEmail().equals(user.getEmail())).collect(Collectors.toList());
-		LOGGER.info("Successfully showing the Trash Notes");
-		return new Response(200, "All Trash Notes",allNotesOfUser);
-	}
+		List<Notes> note = allNotes.stream().filter(note1 -> note1.isTrash()).collect(Collectors.toList());
 
+		List<Notes> allNotesOfUser = note.stream()
+				.filter(userNotes -> userNotes.getUser().getEmail().equals(user.getEmail()))
+				.collect(Collectors.toList());
+		LOGGER.info("Successfully showing the Trash Notes");
+		return new Response(200, "All Trash Notes", allNotesOfUser);
+	}
 
 	/** Archive & Unarchive */
 	public Response archiveNotes(String token, int id) {
@@ -400,26 +408,26 @@ public class NoteServiceImp implements NoteService {
 		LOGGER.warning("Note not present");
 		throw new InvalidNoteException(messageData.Invalid_Note);
 	}
-	
-	/** Show Archive Notes*/
+
+	/** Show Archive Notes */
 	public Response showArchiveNotes(String token) {
 		String email = jwtToken.getToken(token);
 		user = userRepository.findByEmail(email);
 		if (email.isEmpty()) {
 			return new Response(400, "Invalid token", false);
-		}	
+		}
 		List<Notes> allNotes = notesRepository.findAll();
 		if (user == null) {
 			LOGGER.warning("Invalid user");
 			throw new InvalidNoteException(messageData.Invalid_User);
 		}
-		List<Notes> note = allNotes.stream().filter(note1
-				->note1.isAchieve()).collect(Collectors.toList());
-		
-		List<Notes> allNotesOfUser = note.stream().filter( userNotes ->
-		userNotes.getUser().getEmail().equals(user.getEmail())).collect(Collectors.toList());
+		List<Notes> note = allNotes.stream().filter(note1 -> note1.isAchieve()).collect(Collectors.toList());
+
+		List<Notes> allNotesOfUser = note.stream()
+				.filter(userNotes -> userNotes.getUser().getEmail().equals(user.getEmail()))
+				.collect(Collectors.toList());
 		LOGGER.info("Successfully showing the Archive Notes");
-		return new Response(200, "All ArchiveNotes",allNotesOfUser);
+		return new Response(200, "All ArchiveNotes", allNotesOfUser);
 	}
 
 	/** Searching the notes Based on the Id */
@@ -464,13 +472,14 @@ public class NoteServiceImp implements NoteService {
 			LOGGER.info("Successfully Reminder Added");
 			return new Response(200, "Reminder Successfully Added", reminder);
 		} else {
-			if(notes.getReminder()!= null) {
+			if (notes.getReminder() != null) {
 				Reminder reminder = notes.getReminder();
-			reminder.setDateAndTime(reminderDto.getDateAndTime());
-			reminderRepository.save(reminder);
+				reminder.setDateAndTime(reminderDto.getDateAndTime());
+				reminderRepository.save(reminder);
 				LOGGER.warning("Note not present");
-			return new Response(200, "Reminder Successfully Edited", reminder);
-//			throw new ReminderAlreadyPresentException(messageData.Reminder_Already_Present);
+				return new Response(200, "Reminder Successfully Edited", reminder);
+				// throw new
+				// ReminderAlreadyPresentException(messageData.Reminder_Already_Present);
 			}
 		}
 		throw new ReminderAlreadyPresentException(messageData.Reminder_Already_Present);
@@ -540,28 +549,29 @@ public class NoteServiceImp implements NoteService {
 		LOGGER.warning("Invalid Reminder");
 		throw new InvalidReminderException(messageData.Invalid_Reminder);
 	}
+
 	/***/
-	
-	
+
 	public Response showAllReminder(String token) {
 		String email = jwtToken.getToken(token);
 		user = userRepository.findByEmail(email);
 		if (email.isEmpty()) {
 			return new Response(400, "Invalid token", false);
-		}	
+		}
 		List<Notes> allNotes = notesRepository.findAll();
 		if (user == null) {
 			LOGGER.warning("Invalid user");
 			throw new InvalidNoteException(messageData.Invalid_User);
 		}
-		List<Notes> note = allNotes.stream().filter(note1
-				->note1.isAchieve()).collect(Collectors.toList());
-		
-		List<Notes> allNotesOfUser = note.stream().filter( userNotes ->
-		userNotes.getUser().getEmail().equals(user.getEmail())).collect(Collectors.toList());
+		List<Notes> note = allNotes.stream().filter(note1 -> note1.isAchieve()).collect(Collectors.toList());
+
+		List<Notes> allNotesOfUser = note.stream()
+				.filter(userNotes -> userNotes.getUser().getEmail().equals(user.getEmail()))
+				.collect(Collectors.toList());
 		LOGGER.info("Successfully showing the Archive Notes");
-		return new Response(200, "All ArchiveNotes",allNotesOfUser);
+		return new Response(200, "All ArchiveNotes", allNotesOfUser);
 	}
+
 	/** Searching the notes Based on the Title */
 	public Response findByTitle(String token, String title) {
 		List<Notes> notes = notesRepository.findAll();
@@ -582,26 +592,24 @@ public class NoteServiceImp implements NoteService {
 		throw new InvalidNoteException(messageData.Invalid_Note);
 	}
 
-	/** Searching the notes Based on the Description */
+	/** Searching the notes Based on the Description and Title */
 	public Response findByDescription(String token, String description) {
 		String email = jwtToken.getToken(token);
-		List<Notes>Notes = notesRepository.findAll();
+		List<Notes> Notes = notesRepository.findAll();
 		user = userRepository.findByEmail(email);
 		if (user == null) {
 			LOGGER.warning("Invalid user");
 			throw new InvalidUserException(messageData.Invalid_User);
 		}
-		
+
 		if (user.getNotes() != null) {
-			// The stream getting the all notes from database & filter is used in request
-			// and response of the data
-			
-			List<Notes> anote = Notes.stream().filter(note1 -> note1.isAchieve() == false && note1.isTrash()==false).collect(Collectors.toList());
-			List<Notes>getNote = anote.stream().filter(e -> (e.getUser().getId() == user.getId()))
+			List<Notes> anote = Notes.stream().filter(note1 -> note1.isAchieve() == false && note1.isTrash() == false)
 					.collect(Collectors.toList());
-			List<Notes> list = getNote.stream().filter(note -> (note.getDiscription().contains(description)) || (note.getTitle().contains(description)) )
+			List<Notes> getNote = anote.stream().filter(e -> (e.getUser().getId() == user.getId()))
 					.collect(Collectors.toList());
-			
+			List<Notes> list = getNote.stream().filter(
+					note -> (note.getDiscription().contains(description)) || (note.getTitle().contains(description)))
+					.collect(Collectors.toList());
 
 			LOGGER.info("Successfully showing the Notes table data");
 			return new Response(200, "Show the All Notes Successfully ", list);
@@ -610,6 +618,66 @@ public class NoteServiceImp implements NoteService {
 		throw new InvalidNoteException(messageData.Invalid_Note);
 	}
 
+	/** Created PDF Document @throws Exception */
+	public Response createPdf(String token) throws Exception {
+		String email = jwtToken.getToken(token);
+		List<Notes> Notes = notesRepository.findAll();
+		user = userRepository.findByEmail(email);
+		if (user == null) {
+			LOGGER.warning("Invalid user");
+			throw new InvalidUserException(messageData.Invalid_User);
+		}
+		if (user.getNotes() != null) {
+			// The stream getting the all notes from database & filter is used in request
+			// and response of the data
+			List<Notes> note = Notes.stream()
+					.filter(note1 -> note1.isAchieve() == false && note1.isTrash() == false && note1.isPin() == false)
+					.collect(Collectors.toList());
+
+			List<Notes> getNotes = note.stream().filter(e -> e.getUser().getId() == user.getId())
+					.collect(Collectors.toList());
+//			System.out.println(getNotes);
+
+			// A new PDDocument is created. By default, the document has an A4 format.
+			try (PDDocument doc = new PDDocument()) {
+				// A new page is created and added to the document
+				PDPage myPage = new PDPage();
+				doc.addPage(myPage);
+				// To write to a PDF page, we have to create a PDPageContentStream object
+				try (PDPageContentStream cont = new PDPageContentStream(doc, myPage)) {
+					cont.beginText();// Text is written betweeen beginText() methods.
+					// We set the font and text leading.
+					cont.setFont(PDType1Font.TIMES_ROMAN, 12);
+					cont.setLeading(14.5f);
+					// We start a new line of text with newLineAtOffset() method. The origin of a
+					// page is at the bottom-left corner
+
+					cont.newLineAtOffset(25, 725);// The text is written with showText() method
+					// conversion of ArrayList to String
+					StringBuilder strbul = new StringBuilder();
+					for (Notes str : getNotes) {
+						strbul.append(str);
+					}
+//					cont.moveTextPositionByAmount(10, 10);
+					String str = strbul.toString();
+					System.out.println(str);
+					cont.showText(str);
+					// With the newLine() method, we move to the start of the next line of text
+					cont.newLine();
+
+					cont.endText();// Text is written betweeen endText() methods.
+					cont.close();// Stream must be closed before saving document.
+				}
+				DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss");
+				LocalDateTime now = LocalDateTime.now();
+				doc.save("C:\\Users\\HP\\Desktop\\ShoppingApp\\CreatePDF" + dtf.format(now) + ".pdf");
+			}
+			LOGGER.info("Successfully Created PDF");
+			return new Response(200, "Successfully Created PDF ", true);
+		}
+		LOGGER.warning("Note not present");
+		throw new InvalidNoteException(messageData.Invalid_Note);
+	}
 
 	/********************************************
 	 * Elastic Search
